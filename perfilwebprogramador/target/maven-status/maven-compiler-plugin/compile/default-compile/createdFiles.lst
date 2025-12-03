@@ -1,0 +1,10 @@
+objetos\Habilidad.class
+objetos\Perfil.class
+repositorio\PerfilRepositorio.class
+servicios\HabilidadEdicionServlet.class
+servicios\VistaPerfilServlet.class
+servicios\PerfilServlet.class
+objetos\VistaPerfil.class
+repositorio\VistaPerfilRepositorio.class
+repositorio\HabilidadRepositorio.class
+servicios\HabilidadServlet.class
