@@ -10,34 +10,34 @@
         body { margin: 0; background: #f3f4f6; }
 
         .page-wrapper {
-            max-width: 1150px;   
+            max-width: 1400px;   
             margin: 0 auto 40px;
-            padding: 0 24px;
+            padding: 0 32px;
         }
 
         /* BANNER SUPERIOR */
         .banner {
-            max-width: 1150px;
+            max-width: 1400px;
             margin: 16px auto 20px;
             width: 100%;
-            min-height: 30vh;
+            min-height: 35vh;
             background: linear-gradient(135deg, #f97316, #facc15);
             color: white;
-            border-radius: 32px;
-            padding: 26px 32px 22px;
+            border-radius: 40px;
+            padding: 32px 64px 26px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.22);
         }
         .banner-inner {
-            max-width: 880px;
+            max-width: 920px;
             text-align: center;
         }
         .banner-title {
-            font-size: 28px;
+            font-size: 30px;
             font-weight: 800;
-            margin: 0 0 6px;
+            margin: 0 0 8px;
         }
         .banner-subtitle {
             font-size: 15px;
@@ -47,9 +47,9 @@
 
         /* TABS */
         .tabs-bar {
-            max-width: 1150px;
+            max-width: 1400px;
             margin: 0 auto 16px;
-            padding: 0 24px;
+            padding: 0 32px;
         }
         .tabs-container {
             background: #fff7ed;
@@ -83,7 +83,7 @@
         .main-layout {
             display: grid;
             grid-template-columns: 1.1fr 1.1fr;
-            gap: 20px;
+            gap: 24px;
         }
         @media (max-width: 900px) {
             .main-layout {
@@ -148,6 +148,22 @@
         .btn-small {
             padding: 4px 10px;
             font-size: 12px;
+        }
+
+        /* Botones del formulario */
+        .form-actions {
+            margin-top: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .form-actions-left,
+        .form-actions-right {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         /* MI PERFIL / PREVIEW */
@@ -370,8 +386,18 @@
                     <input class="form-input" id="inputLinkedin" oninput="updatePreview()">
                 </div>
 
-                <div style="margin-top: 14px;">
-                    <button class="btn-primary" onclick="guardarPerfil()">Guardar perfil</button>
+                <div class="form-actions">
+                    <!-- IZQUIERDA: Cargar foto + Habilidades -->
+                    <div class="form-actions-left">
+                        <button class="btn-secondary" type="button">Cargar foto</button>
+                        <button class="btn-secondary" type="button" onclick="agregarHabilidades()">Habilidades</button>
+                    </div>
+
+                    <!-- DERECHA: Guardar + Eliminar -->
+                    <div class="form-actions-right">
+                        <button class="btn-primary" type="button" onclick="guardarPerfil()">Guardar cambios</button>
+                        <button class="btn-danger" type="button" onclick="eliminarFormulario()">Eliminar</button>
+                    </div>
                 </div>
             </div>
 
@@ -507,14 +533,33 @@
 </div>
 
 <script>
-    const perfiles = [];
+    /* ====== PERSISTENCIA EN LOCALSTORAGE ====== */
+    const STORAGE_KEY = "perfilesPortafolio";
+
+    let perfiles = [];
     let indiceEdicion = null;
     let indiceDetalle = null;
+
+    function cargarPerfilesDesdeStorage() {
+        const data = localStorage.getItem(STORAGE_KEY);
+        if (data) {
+            try {
+                perfiles = JSON.parse(data);
+            } catch (e) {
+                console.error("Error al leer perfiles del storage", e);
+                perfiles = [];
+            }
+        }
+    }
+
+    function guardarPerfilesEnStorage() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(perfiles));
+    }
 
     // ====== BANNER ======
     function setBannerPortafolio() {
         document.getElementById("bannerTitle").textContent =
-            "Bienvenid@ al portafolio de perfiles profesionales.";
+            "Bienvenid@ al portafolio de perfiles profesionales";
         document.getElementById("bannerSubtitle").textContent =
             "Aquí podrás encontrar datos personales, datos de contacto, experiencia y enlaces profesionales de diversas personas.";
     }
@@ -557,6 +602,7 @@
         document.getElementById("inputGithub").value = perfil.github || "";
         document.getElementById("inputLinkedin").value = perfil.linkedin || "";
         updatePreview();
+        indiceEdicion = null;
     }
 
     function limpiarFormulario() {
@@ -604,13 +650,25 @@
             perfiles[indiceEdicion] = perfil;
         }
 
+        // Guardar en localStorage
+        guardarPerfilesEnStorage();
+
         limpiarFormulario();
         renderEditarListado();
         renderVerListado();
 
         setBannerPortafolio();
-
         activarTab("ver");
+    }
+
+    function agregarHabilidades() {
+        alert("Aquí podrás agregar y gestionar tus habilidades técnicas. (Función en construcción)");
+    }
+
+    function eliminarFormulario() {
+        if (!confirm("¿Deseas borrar los datos del formulario?")) return;
+        limpiarFormulario();
+        setBannerPortafolio();
     }
 
     // ====== LISTAS EDITAR / VER ======
@@ -656,6 +714,10 @@
             btnDel.onclick = () => {
                 if (!confirm("¿Eliminar este perfil?")) return;
                 perfiles.splice(idx, 1);
+
+                // Guardar cambios en localStorage
+                guardarPerfilesEnStorage();
+
                 renderEditarListado();
                 renderVerListado();
                 if (perfiles.length === 0) {
@@ -740,7 +802,6 @@
         document.getElementById("detalleEnlaces").textContent = enlacesText;
 
         setBannerPerfil(p.nombres);
-
         activarTab("detalle");
     }
 
@@ -772,6 +833,7 @@
     });
 
     // ====== ESTADO INICIAL ======
+    cargarPerfilesDesdeStorage();
     setBannerPortafolio();
     limpiarFormulario();
     renderEditarListado();
