@@ -649,6 +649,17 @@
 
     // ====== FORMULARIO Y PREVIEW ======
     function leerFormulario() {
+
+        const habilidades = [];
+        for (let i = 0; i < contador; i++) {
+            const nombre = document.getElementById("inputNombreHabilidad_" + i)?.value.trim() || "";
+            const porcentaje = document.getElementById("inputPorcentajeHabilidad_" + i)?.value.trim() || "";
+            habilidades.push({
+                nombre: nombre,
+                porcentaje: porcentaje
+            });
+        }
+
         return {
             nombres: document.getElementById("inputNombres").value.trim(),
             apellidos: document.getElementById("inputApellidos").value.trim(),
@@ -662,7 +673,8 @@
             github: document.getElementById("inputGithub").value.trim(),
             linkedin: document.getElementById("inputLinkedin").value.trim(),
             nombreHabilidad: document.getElementById("inputNombreHabilidad").value.trim(),
-            porcentajeHabilidad: document.getElementById("inputPorcentajeHabilidad").value.trim()
+            porcentajeHabilidad: document.getElementById("inputPorcentajeHabilidad").value.trim(),
+            habilidades
         };
     }
 
@@ -714,11 +726,9 @@
         document.getElementById("frontcircle").setAttribute("stroke-dashoffset",-(364 * p.porcentajeHabilidad / 100 - 364));
 
         for (let i = 0; i < contador; i++) {
-            const nombreHabilidadPreview = document.getElementById("inputNombreHabilidad_" + i).value.trim();
-            const porcentajeHabilidadPreview = document.getElementById("inputPorcentajeHabilidad_" + i).value.trim();
-            document.getElementById("previewNombreHabilidad_" + i).textContent = nombreHabilidadPreview.toUpperCase() || "—";
-            document.getElementById("previewPorcentajeHabilidad_" + i).textContent = porcentajeHabilidadPreview + "%" || "—";
-            document.getElementById("frontcircle_" + i).setAttribute("stroke-dashoffset", -(364 * porcentajeHabilidadPreview / 100 - 364));
+            document.getElementById("previewNombreHabilidad_" + i).textContent = p.habilidades[i].nombre.toUpperCase() || "—";
+            document.getElementById("previewPorcentajeHabilidad_" + i).textContent = p.habilidades[i].porcentaje + "%" || "—";
+            document.getElementById("frontcircle_" + i).setAttribute("stroke-dashoffset", -(364 * p.habilidades[i].porcentaje / 100 - 364)); 
         }
 
         const enlacesText =
@@ -756,21 +766,30 @@
     function agregarHabilidades() {
         let plantilla = document.getElementById("nuevaHabilidad");
         let plantilla1 = document.getElementById("progressHabilidad");
+        let plantilla2 = document.getElementById("detalleHabilidad");
         
         let copia = plantilla.cloneNode(true);
         let copia1 = plantilla1.cloneNode(true);
+        let copia2 = plantilla2.cloneNode(true);
         
         copia.style.display = "block";
         copia1.style.display = "inline";
+        copia2.style.display = "inline";
 
         copia.id = "habilidades_" + contador;
         copia1.id = "habilidadProgress_" + contador;
+        copia2.id = "habilidadProgressDatalle_" + contador;
 
         let nombreInput = copia.querySelector("#inputNombreHabilidad");
         let porcentajeInput = copia.querySelector("#inputPorcentajeHabilidad");
+        
         let nombreHabilidadText = copia1.querySelector("#previewNombreHabilidad");
         let porcentajeHabilidadText = copia1.querySelector("#previewPorcentajeHabilidad");
         let frontCircle = copia1.querySelector("#frontcircle");
+        
+        let nombreHabilidadTextDetalle = copia2.querySelector("#detalleNombreHabilidad");
+        let porcentajeHabilidadTextDetalle = copia2.querySelector("#detallePorcentajeHabilidad");
+        let frontCircleDetalle = copia2.querySelector("#detalleFrontCircle");
 
         nombreInput.id = "inputNombreHabilidad_" + contador;
         nombreInput.value = "";
@@ -781,14 +800,24 @@
         nombreHabilidadText.id = "previewNombreHabilidad_" + contador;
         nombreHabilidadText.textContent = "—";
         
+        nombreHabilidadTextDetalle.id = "detalleNombreHabilidad_" + contador;
+        nombreHabilidadTextDetalle.textContent = "—";
+        
         porcentajeHabilidadText.id = "previewPorcentajeHabilidad_" + contador;
         porcentajeHabilidadText.textContent = "%";
         
+        porcentajeHabilidadTextDetalle.id = "detallePorcentajeHabilidad_" + contador;
+        porcentajeHabilidadTextDetalle.textContent = "%";
+        
         frontCircle.id = "frontcircle_" + contador;
         frontCircle.setAttribute("stroke-dashoffset", 364);
+        
+        frontCircleDetalle.id = "detalleFrontCircle_" + contador;
+        frontCircleDetalle.setAttribute("stroke-dashoffset", 364);
             
         document.getElementById("nuevaHabilidadForm").appendChild(copia);
         document.getElementById("nuevaHabilidadPreview").appendChild(copia1);
+        document.getElementById("nuevaHabilidadDetalle").appendChild(copia2);
         
         contador++;
     }
@@ -803,6 +832,9 @@
             const previewBlock = document.getElementById("habilidadProgress_" + index);
             if (previewBlock) previewBlock.remove();
 
+            const detalleBlock = document.getElementById("habilidadProgressDatalle_" + index);
+            if (detalleBlock) previewBlock.remove();
+
             contador--;
         }
     }
@@ -812,7 +844,7 @@
             eliminarHabilidades();
         }
     }
-    
+
     function eliminarFormulario() {
         if (!confirm("¿Deseas borrar los datos del formulario?")) return;
         limpiarFormulario();
@@ -946,6 +978,13 @@
         document.getElementById("detalleNombreHabilidad").textContent = p.nombreHabilidad.toUpperCase() || "—";
         document.getElementById("detallePorcentajeHabilidad").textContent = p.porcentajeHabilidad + "%" || "—";
         document.getElementById("detalleFrontCircle").setAttribute("stroke-dashoffset",-(364 * p.porcentajeHabilidad / 100 - 364));
+
+        for (let i = 0; i < contador; i++) {
+            document.getElementById("detalleNombreHabilidad_" + i).textContent = p.habilidades[i].nombre.toUpperCase() || "—";
+            document.getElementById("detallePorcentajeHabilidad_" + i).textContent = p.habilidades[i].porcentaje + "%" || "—";
+            document.getElementById("detalleFrontCircle_" + i).setAttribute("stroke-dashoffset", -(364 * p.habilidades[i].porcentaje / 100 - 364)); 
+        }
+        
         const enlacesText =
             "GitHub: " + (p.github || "—") + "\n" +
             "LinkedIn: " + (p.linkedin || "—");
