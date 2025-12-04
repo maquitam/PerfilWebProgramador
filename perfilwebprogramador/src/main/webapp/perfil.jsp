@@ -426,21 +426,25 @@
                     <input class="form-input" id="inputLinkedin" oninput="updatePreview()">
                 </div>
                 
-                <div class="form-group">
-                    <label class="form-label">Nombre Habilidad</label>
-                    <input class="form-input" id="inputNombreHabilidad" placeholder="JAVA" oninput="updatePreview()">
-                </div>
+                <div id="nuevaHabilidad">
+                    <div class="form-group">
+                        <label class="form-label">Nombre Habilidad</label>
+                        <input class="form-input" id="inputNombreHabilidad" placeholder="JAVA" oninput="updatePreview()">
+                    </div>
                 
-                <div class="form-group">
-                    <label class="form-label">Porcentaje Habilidad</label>
-                    <input type="number" min="0" max="100" placeholder="60" class="form-input" id="inputPorcentajeHabilidad" oninput="updatePreview()">
+                    <div class="form-group">
+                        <label class="form-label">Porcentaje Habilidad</label>
+                        <input type="number" min="0" max="100" placeholder="60" class="form-input" id="inputPorcentajeHabilidad" oninput="updatePreview()">
+                    </div>
                 </div>
+                <div id="nuevaHabilidadForm"></div>
 
                 <div class="form-actions">
                     <!-- IZQUIERDA: Cargar foto + Habilidades -->
                     <div class="form-actions-left">
                         <button class="btn-secondary" type="button">Cargar foto</button>
-                        <button class="btn-secondary" type="button" onclick="agregarHabilidades()">Habilidades</button>
+                        <button class="btn-secondary" type="button" onclick="agregarHabilidades()">Nueva Habilidad</button>
+                        <button class="btn-secondary" type="button" onclick="eliminarHabilidades()">Eliminar Habilidad</button>
                     </div>
 
                     <!-- DERECHA: Guardar + Eliminar -->
@@ -505,12 +509,13 @@
 
                     <div class="section-title">Habilidades</div>
                     <div> 
-                        <svg viewBox="-17 -17 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg)">
+                        <svg id="progressHabilidad" viewBox="-17 -17 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg)">
                             <text id="previewNombreHabilidad" class="habilityname" x="70" y="-3" style="transform:rotate(90deg) translate(0px, -145px)">—</text>
                             <circle class="backcircle"></circle>
-                            <circle id="frontcircle" class="frontcircle" stroke-dashoffset="123px"></circle>
+                            <circle id="frontcircle" class="frontcircle" stroke-dashoffset="-364px"></circle>
                             <text id="previewPorcentajeHabilidad" class="textpercent" x="35px" y="80px" style="transform:rotate(90deg) translate(0px, -138px)">—</text>
                         </svg>
+                        <span id="nuevaHabilidadPreview"></span>
                     </div>
                 </div>
             </div>
@@ -680,6 +685,7 @@
     }
 
     function limpiarFormulario() {
+        eliminarAllHabilidades();
         cargarFormulario({
             nombres:"",apellidos:"",edad:"",telefono:"",correo:"",
             ciudadNacimiento:"",ciudadResidencia:"",
@@ -706,6 +712,14 @@
         document.getElementById("previewNombreHabilidad").textContent = p.nombreHabilidad.toUpperCase() || "—";
         document.getElementById("previewPorcentajeHabilidad").textContent = p.porcentajeHabilidad + "%" || "—";
         document.getElementById("frontcircle").setAttribute("stroke-dashoffset",-(364 * p.porcentajeHabilidad / 100 - 364));
+
+        for (let i = 0; i < contador; i++) {
+            const nombreHabilidadPreview = document.getElementById("inputNombreHabilidad_" + i).value.trim();
+            const porcentajeHabilidadPreview = document.getElementById("inputPorcentajeHabilidad_" + i).value.trim();
+            document.getElementById("previewNombreHabilidad_" + i).textContent = nombreHabilidadPreview.toUpperCase() || "—";
+            document.getElementById("previewPorcentajeHabilidad_" + i).textContent = porcentajeHabilidadPreview + "%" || "—";
+            document.getElementById("frontcircle_" + i).setAttribute("stroke-dashoffset", -(364 * porcentajeHabilidadPreview / 100 - 364));
+        }
 
         const enlacesText =
             "GitHub: " + (p.github || "—") + "\n" +
@@ -738,10 +752,67 @@
         activarTab("ver");
     }
 
+    let contador = 0;
     function agregarHabilidades() {
-        alert("Aquí podrás agregar y gestionar tus habilidades técnicas. (Función en construcción)");
+        let plantilla = document.getElementById("nuevaHabilidad");
+        let plantilla1 = document.getElementById("progressHabilidad");
+        
+        let copia = plantilla.cloneNode(true);
+        let copia1 = plantilla1.cloneNode(true);
+        
+        copia.style.display = "block";
+        copia1.style.display = "inline";
+
+        copia.id = "habilidades_" + contador;
+        copia1.id = "habilidadProgress_" + contador;
+
+        let nombreInput = copia.querySelector("#inputNombreHabilidad");
+        let porcentajeInput = copia.querySelector("#inputPorcentajeHabilidad");
+        let nombreHabilidadText = copia1.querySelector("#previewNombreHabilidad");
+        let porcentajeHabilidadText = copia1.querySelector("#previewPorcentajeHabilidad");
+        let frontCircle = copia1.querySelector("#frontcircle");
+
+        nombreInput.id = "inputNombreHabilidad_" + contador;
+        nombreInput.value = "";
+        
+        porcentajeInput.id = "inputPorcentajeHabilidad_" + contador;
+        porcentajeInput.value = "";
+        
+        nombreHabilidadText.id = "previewNombreHabilidad_" + contador;
+        nombreHabilidadText.textContent = "—";
+        
+        porcentajeHabilidadText.id = "previewPorcentajeHabilidad_" + contador;
+        porcentajeHabilidadText.textContent = "%";
+        
+        frontCircle.id = "frontcircle_" + contador;
+        frontCircle.setAttribute("stroke-dashoffset", 364);
+            
+        document.getElementById("nuevaHabilidadForm").appendChild(copia);
+        document.getElementById("nuevaHabilidadPreview").appendChild(copia1);
+        
+        contador++;
     }
 
+    function eliminarHabilidades() {
+        if (contador > 0) {
+            const index = contador - 1;
+
+            const formBlock = document.getElementById("habilidades_" + index);
+            if (formBlock) formBlock.remove();
+
+            const previewBlock = document.getElementById("habilidadProgress_" + index);
+            if (previewBlock) previewBlock.remove();
+
+            contador--;
+        }
+    }
+
+    function eliminarAllHabilidades() {
+        while (contador > 0) {
+            eliminarHabilidades();
+        }
+    }
+    
     function eliminarFormulario() {
         if (!confirm("¿Deseas borrar los datos del formulario?")) return;
         limpiarFormulario();
