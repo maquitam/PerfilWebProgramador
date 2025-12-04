@@ -301,6 +301,46 @@
             justify-content: flex-end;
             gap: 8px;
         }
+                
+        /*Circulo de porcentaje de habilidad*/    
+        .backcircle {
+            r: 58px;
+            cx: 68px;
+            cy: 68px;
+            stroke: #FEF3C7;
+            stroke-width: 18px;
+            fill: transparent;
+        }
+        .frontcircle {
+            r: 58px;
+            cx: 68px;
+            cy: 68px;
+            stroke: #FBBF24;
+            stroke-width: 20px;
+            stroke-linecap: round;
+            fill: transparent;
+            stroke-dasharray: 364.24px;
+        }
+        .textpercent {
+            fill: #3C3A49; /*#BD6C2E*/
+            font-size: 35px;
+            font-weight: bold;
+        }
+        h2.habilities{
+            color: #3C3A49;
+        }
+        .habilityname {
+            text-anchor: middle;
+            font-size: 24px;
+            fill: #3C3A49;
+            font-weight: bold;
+        }
+        svg {
+            width: 136px;
+            height: 119px;
+            border: none;
+            margin: 15px 15px 0px 0px;
+        }
     </style>
 </head>
 <body>
@@ -385,6 +425,16 @@
                     <label class="form-label">Enlace LinkedIn</label>
                     <input class="form-input" id="inputLinkedin" oninput="updatePreview()">
                 </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Nombre Habilidad</label>
+                    <input class="form-input" id="inputNombreHabilidad" placeholder="JAVA" oninput="updatePreview()">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Porcentaje Habilidad</label>
+                    <input type="number" min="0" max="100" placeholder="60" class="form-input" id="inputPorcentajeHabilidad" oninput="updatePreview()">
+                </div>
 
                 <div class="form-actions">
                     <!-- IZQUIERDA: Cargar foto + Habilidades -->
@@ -451,6 +501,16 @@
                     <div class="section-text" id="previewEnlaces">
                         GitHub: —  
                         LinkedIn: —
+                    </div>
+
+                    <div class="section-title">Habilidades</div>
+                    <div> 
+                        <svg viewBox="-17 -17 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg)">
+                            <text id="previewNombreHabilidad" class="habilityname" x="70" y="-3" style="transform:rotate(90deg) translate(0px, -145px)">—</text>
+                            <circle class="backcircle"></circle>
+                            <circle id="frontcircle" class="frontcircle" stroke-dashoffset="123px"></circle>
+                            <text id="previewPorcentajeHabilidad" class="textpercent" x="35px" y="80px" style="transform:rotate(90deg) translate(0px, -138px)">—</text>
+                        </svg>
                     </div>
                 </div>
             </div>
@@ -585,7 +645,9 @@
             biografia: document.getElementById("inputBiografia").value.trim(),
             experiencia: document.getElementById("inputExperiencia").value.trim(),
             github: document.getElementById("inputGithub").value.trim(),
-            linkedin: document.getElementById("inputLinkedin").value.trim()
+            linkedin: document.getElementById("inputLinkedin").value.trim(),
+            nombreHabilidad: document.getElementById("inputNombreHabilidad").value.trim(),
+            porcentajeHabilidad: document.getElementById("inputPorcentajeHabilidad").value.trim()
         };
     }
 
@@ -601,6 +663,8 @@
         document.getElementById("inputExperiencia").value = perfil.experiencia || "";
         document.getElementById("inputGithub").value = perfil.github || "";
         document.getElementById("inputLinkedin").value = perfil.linkedin || "";
+        document.getElementById("inputNombreHabilidad").value = perfil.nombreHabilidad || "";
+        document.getElementById("inputPorcentajeHabilidad").value = perfil.porcentajeHabilidad|| "";
         updatePreview();
         indiceEdicion = null;
     }
@@ -629,6 +693,9 @@
         document.getElementById("previewCiudadResidencia").textContent = p.ciudadResidencia || "—";
         document.getElementById("previewBiografia").textContent = p.biografia || "—";
         document.getElementById("previewExperiencia").textContent = p.experiencia || "—";
+        document.getElementById("previewNombreHabilidad").textContent = p.nombreHabilidad.toUpperCase() || "—";
+        document.getElementById("previewPorcentajeHabilidad").textContent = p.porcentajeHabilidad + "%" || "—";
+        document.getElementById("frontcircle").setAttribute("stroke-dashoffset",-(364 * p.porcentajeHabilidad / 100 - 364));
 
         const enlacesText =
             "GitHub: " + (p.github || "—") + "\n" +
