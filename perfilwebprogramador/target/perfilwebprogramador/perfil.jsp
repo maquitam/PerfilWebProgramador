@@ -1,554 +1,594 @@
-<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    String bannerTitulo = (String) request.getAttribute("bannerTitulo");
+    String bannerSubtitulo = (String) request.getAttribute("bannerSubtitulo");
+    String fotoRuta = (String) request.getAttribute("fotoRuta");
+
+    String bannerTituloMostrar = (bannerTitulo != null)
+            ? bannerTitulo
+            : "Bienvenid@ al portafolio de perfiles profesionales";
+
+    String bannerSubtituloMostrar = (bannerSubtitulo != null)
+            ? bannerSubtitulo
+            : "Aquí podrás encontrar datos personales, datos de contacto, experiencia y enlaces profesionales de diversas personas.";
+
+    String fotoUrl = "";
+    if (fotoRuta != null && !fotoRuta.isEmpty()) {
+        fotoUrl = request.getContextPath() + "/" + fotoRuta;
+    }
+%>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Perfil Web Programador</title>
-
+    <title>Portafolio de perfiles</title>
     <style>
-        * { box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
-        body { margin: 0; background: #f3f4f6; }
-
-        .page-wrapper {
-            max-width: 1400px;   
-            margin: 0 auto 40px;
-            padding: 0 32px;
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #f3f4f6;
         }
 
-        /* BANNER SUPERIOR */
+        .page-container {
+            max-width: 1200px;
+            margin: 24px auto 40px;
+            padding: 0 16px 24px;
+        }
+
         .banner {
             max-width: 1400px;
-            margin: 16px auto 20px;
+            margin: 0 auto 20px;
             width: 100%;
-            min-height: 35vh;
+            min-height: 16vh;
             background: linear-gradient(135deg, #f97316, #facc15);
             color: white;
             border-radius: 40px;
-            padding: 32px 64px 26px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            padding: 24px 40px 24px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.22);
-        }
-        .banner-inner {
-            max-width: 920px;
-            text-align: center;
-        }
-        .banner-title {
-            font-size: 30px;
-            font-weight: 800;
-            margin: 0 0 8px;
-        }
-        .banner-subtitle {
-            font-size: 15px;
-            margin: 0;
-            opacity: 0.96;
+            position: relative;
+
+            display: flex;
+            justify-content: center;
         }
 
-        /* TABS */
-        .tabs-bar {
-            max-width: 1400px;
-            margin: 0 auto 16px;
-            padding: 0 32px;
+        .banner-inner {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
         }
-        .tabs-container {
-            background: #fff7ed;
-            border-radius: 999px;
-            padding: 4px;
-            display: inline-flex;
-            gap: 4px;
-            border: 1px solid #fed7aa;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+
+        .banner-header {
+            text-align: center;
+            margin-bottom: 12px;
         }
-        .tab-button {
+
+        .banner-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .banner-subtitle {
+            font-size: 14px;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .banner-edit-toggle {
+            position: absolute;
+            top: 16px;
+            left: 24px;
+        }
+
+        .btn-toggle {
             border: none;
             border-radius: 999px;
-            padding: 6px 16px;
+            padding: 6px 14px;
+            font-size: 12px;
+            cursor: pointer;
+            background: #fef3c7;
+            color: #78350f;
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+        }
+
+        .banner-edit-panel {
+            display: none;
+            margin-top: 16px;
+            width: 100%;
+        }
+
+        .banner-edit-panel.open {
+            display: block;
+        }
+
+        .banner-edit-toolbar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 6px;
+        }
+
+        .btn-small {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-secondary {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .btn-primary {
+            background: #f97316;
+            color: white;
+            border: none;
+            border-radius: 999px;
+            padding: 6px 14px;
             font-size: 13px;
             cursor: pointer;
-            background: transparent;
-            color: #92400e;
-            font-weight: 600;
         }
+
+        .banner-edit-columns {
+            display: flex;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .banner-edit-col {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+
+        .mini-banner {
+            background: rgba(255,255,255,0.25);
+            border-radius: 24px;
+            padding: 16px 18px;
+            text-align: left;
+        }
+
+        .mini-banner-title {
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .mini-banner-subtitle {
+            font-size: 12px;
+        }
+
+        .banner-edit-label {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .banner-edit-input {
+            width: 100%;
+            border-radius: 999px;
+            border: none;
+            padding: 8px 14px;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        /* Tabs generales */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .tab-button {
+            border-radius: 999px;
+            border: 1px solid #fed7aa;
+            background: #fff7ed;
+            padding: 6px 14px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
         .tab-button.active {
             background: #f97316;
             color: white;
+            border-color: #f97316;
         }
 
-        /* CONTENIDOS DE TABS */
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        .tab-content {
+            display: none;
+        }
 
-        /* LAYOUT PRINCIPAL (AGREGAR) */
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: #fffbeb;
+            border-radius: 26px;
+            border: 1px solid #fed7aa;
+            padding: 18px 18px 20px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+
         .main-layout {
             display: grid;
-            grid-template-columns: 1.1fr 1.1fr;
-            gap: 24px;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
+
         @media (max-width: 900px) {
             .main-layout {
                 grid-template-columns: 1fr;
             }
         }
 
-        /* TARJETAS */
-        .card {
-            background: #fffbeb;
-            border-radius: 18px;
-            padding: 18px 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            border: 1px solid #fbbf24;
-        }
-        .card h2 {
-            margin-top: 0;
-            font-size: 18px;
+        .form-group {
+            margin-bottom: 8px;
         }
 
-        .form-group { margin-bottom: 12px; }
         .form-label {
             display: block;
-            margin-bottom: 4px;
-            font-size: 13px;
-            font-weight: bold;
-            color: #374151;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 3px;
         }
-        .form-input, .form-textarea {
-            width: 100%;
-            padding: 7px 8px;
-            border-radius: 8px;
-            border: 1px solid #d1d5db;
-            font-size: 14px;
-        }
-        .form-textarea { min-height: 70px; resize: vertical; }
 
-        .btn-primary, .btn-secondary, .btn-danger, .btn-small {
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            border-radius: 999px;
+            border: 1px solid #fed7aa;
+            padding: 8px 12px;
+            font-size: 13px;
+            box-sizing: border-box;
+        }
+
+        .form-textarea {
+            border-radius: 16px;
+            min-height: 60px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-danger {
+            background: #f97373;
+            color: white;
             border: none;
             border-radius: 999px;
-            padding: 8px 16px;
+            padding: 6px 14px;
             font-size: 13px;
             cursor: pointer;
-            font-weight: 600;
-        }
-        .btn-primary {
-            background: #f97316;
-            color: white;
-        }
-        .btn-primary:hover { background: #ea580c; }
-        .btn-secondary {
-            background: white;
-            border: 1px solid #e5e7eb;
-            color: #374151;
-        }
-        .btn-secondary:hover { background: #f9fafb; }
-        .btn-danger {
-            background: #ef4444;
-            color: white;
-        }
-        .btn-danger:hover { background: #dc2626; }
-        .btn-small {
-            padding: 4px 10px;
-            font-size: 12px;
         }
 
-        /* Botones del formulario */
-        .form-actions {
-            margin-top: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .form-actions-left,
-        .form-actions-right {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
+        .btn-soft {
+            background: #fee2e2;
+            color: #7f1d1d;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 999px;
+            cursor: pointer;
         }
 
-        /* MI PERFIL / PREVIEW */
-        .profile-title {
-            font-size: 18px;
+        /* Vista previa rápida */
+        .preview-title {
             font-weight: 700;
-            margin-bottom: 12px;
+            margin-bottom: 6px;
         }
 
-        .profile-photo-placeholder {
-            width: 220px;
-            height: 220px;
+        .preview-photo-wrapper {
+            width: 160px;
+            height: 160px;
             border-radius: 24px;
-            border: 2px dashed #fbbf24;
+            border: 2px dashed #fed7aa;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #fef3c7;
-            color: #92400e;
-            font-size: 14px;
-            margin: 0 auto 18px;
-            text-align: center;
+            margin-bottom: 8px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.7);
         }
 
-        .profile-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 4px;
-            font-size: 14px;
-            color: #374151;
+        .preview-photo-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
         }
-        .profile-row-inline {
+
+        .preview-photo-placeholder {
+            font-size: 12px;
+            color: #b45309;
             display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
         }
-        .label-strong { font-weight: 600; }
 
-        .section-title {
-            margin-top: 10px;
+        .preview-text {
+            font-size: 15px;
+            margin: 5px 0;
+            line-height: 1.5;
+        }
+
+        .label-strong {
             font-weight: 700;
-            font-size: 14px;
-        }
-        .section-text {
-            font-size: 14px;
-            margin-top: 2px;
-            white-space: pre-line;
         }
 
-        .profile-actions-bottom {
-            margin-top: 16px;
-            display: flex;
-            gap: 8px;
-            justify-content: flex-start;
-        }
-
-        /* LISTAS DE PERFILES (VER / EDITAR) */
+        /* Listados */
         .profiles-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-        }
-        .profiles-empty {
-            font-size: 14px;
-            color: #6b7280;
+            gap: 6px;
         }
 
-        .profile-item {
-            border-radius: 14px;
+        .profile-list-item {
+            background: #fff7ed;
+            border-radius: 18px;
             padding: 10px 12px;
-            background: #fefce8;
-            border: 1px solid #facc15;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 14px;
-            gap: 12px;
         }
-        .profile-item-main {
+
+        .profile-list-main {
             display: flex;
-            flex-direction: column;
+            gap: 10px;
+            align-items: center;
         }
-        .profile-item-name {
+
+        .profile-list-photo-mini {
+            width: 44px;
+            height: 44px;
+            border-radius: 16px;
+            background: #fed7aa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            font-size: 12px;
+            color: #7c2d12;
+        }
+
+        .profile-list-photo-mini img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-list-text {
+            font-size: 13px;
+        }
+
+        .profile-list-name {
             font-weight: 700;
         }
-        .profile-item-sub {
+
+        .profile-list-meta {
             font-size: 12px;
             color: #4b5563;
         }
 
-        /* LISTADO VER PERFILES */
-        .profile-list-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 12px;
-            border-radius: 14px;
-            background: #fefce8;
-            border: 1px solid #facc15;
-        }
-        .profile-list-photo {
-            width: 70px;
-            height: 70px;
-            border-radius: 16px;
-            border: 2px dashed #fbbf24;
-            background: #fef3c7;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            color: #92400e;
-            text-align: center;
-            flex-shrink: 0;
-        }
-        .profile-list-text {
-            flex: 1;
-        }
-        .profile-list-name {
-            font-weight: 700;
-            margin-bottom: 2px;
-        }
-        .profile-list-meta {
-            font-size: 13px;
-            color: #4b5563;
-            margin-bottom: 2px;
-        }
         .profile-list-bio {
-            font-size: 13px;
+            font-size: 12px;
+            color: #6b7280;
         }
 
-        /* DETALLE PERFIL */
-        .detalle-actions {
-            margin-top: 16px;
+        .profile-list-actions {
             display: flex;
-            justify-content: flex-end;
-            gap: 8px;
+            gap: 6px;
         }
     </style>
 </head>
 <body>
+<div class="page-container">
 
-<!-- BANNER SUPERIOR -->
-<section class="banner">
-    <div class="banner-inner">
-        <p class="banner-title" id="bannerTitle"></p>
-        <p class="banner-subtitle" id="bannerSubtitle"></p>
-    </div>
-</section>
-
-<!-- TABS -->
-<div class="tabs-bar">
-    <div class="tabs-container">
-        <button class="tab-button active" data-tab="agregar">Agregar perfil</button>
-        <button class="tab-button" data-tab="editar">Editar perfiles</button>
-        <button class="tab-button" data-tab="ver">Ver perfiles</button>
-    </div>
-</div>
-
-<div class="page-wrapper">
-
-    <!-- TAB AGREGAR -->
-    <section id="tab-agregar" class="tab-content active">
-        <div class="main-layout">
-            <!-- FORMULARIO -->
-            <div class="card">
-                <h2>Formulario de datos personales</h2>
-
-                <div class="form-group">
-                    <label class="form-label">Nombres</label>
-                    <input class="form-input" id="inputNombres" oninput="updatePreview()">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Apellidos</label>
-                    <input class="form-input" id="inputApellidos" oninput="updatePreview()">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Edad</label>
-                    <input type="number" class="form-input" id="inputEdad" oninput="updatePreview()">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Teléfono</label>
-                    <input class="form-input" id="inputTelefono" oninput="updatePreview()">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Correo</label>
-                    <input type="email" class="form-input" id="inputCorreo" oninput="updatePreview()">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Ciudad de nacimiento</label>
-                    <input class="form-input" id="inputCiudadNacimiento" oninput="updatePreview()">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Ciudad de residencia</label>
-                    <input class="form-input" id="inputCiudadResidencia" oninput="updatePreview()">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Biografía</label>
-                    <textarea class="form-textarea" id="inputBiografia" oninput="updatePreview()"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Experiencia</label>
-                    <textarea class="form-textarea" id="inputExperiencia" oninput="updatePreview()"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Enlace GitHub</label>
-                    <input class="form-input" id="inputGithub" oninput="updatePreview()">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Enlace LinkedIn</label>
-                    <input class="form-input" id="inputLinkedin" oninput="updatePreview()">
-                </div>
-
-                <div class="form-actions">
-                    <!-- IZQUIERDA: Cargar foto + Habilidades -->
-                    <div class="form-actions-left">
-                        <button class="btn-secondary" type="button">Cargar foto</button>
-                        <button class="btn-secondary" type="button" onclick="agregarHabilidades()">Habilidades</button>
-                    </div>
-
-                    <!-- DERECHA: Guardar + Eliminar -->
-                    <div class="form-actions-right">
-                        <button class="btn-primary" type="button" onclick="guardarPerfil()">Guardar cambios</button>
-                        <button class="btn-danger" type="button" onclick="eliminarFormulario()">Eliminar</button>
-                    </div>
-                </div>
+    <!-- BANNER -->
+    <div class="banner">
+        <div class="banner-inner">
+            <div class="banner-edit-toggle">
+                <button type="button" id="toggleBannerEdit" class="btn-toggle">Modo edición</button>
             </div>
 
-            <div class="card">
-                <div class="profile-title">Mi perfil (vista previa)</div>
+            <div class="banner-header">
+                <div id="bannerTitle" class="banner-title"><%= bannerTituloMostrar %></div>
+                <p id="bannerSubtitle" class="banner-subtitle"><%= bannerSubtituloMostrar %></p>
+            </div>
 
-                <div class="profile-photo-placeholder">
-                    Foto de perfil
+            <div class="banner-edit-panel" id="bannerEditPanel">
+                <div class="banner-edit-toolbar">
+                    <button type="button" id="closeBannerEdit" class="btn-small btn-secondary">Cerrar edición</button>
                 </div>
 
-                <div class="profile-grid">
-                    <div>
-                        <span class="label-strong">Nombre completo:</span>
-                        <span id="previewNombreCompleto">—</span>
-                    </div>
-
-                    <div>
-                        <span class="label-strong">Edad:</span>
-                        <span id="previewEdad">—</span>
-                    </div>
-
-                    <div class="profile-row-inline">
-                        <div>
-                            <span class="label-strong">Teléfono:</span>
-                            <span id="previewTelefono">—</span>
-                        </div>
-                        <div>
-                            <span class="label-strong">Correo:</span>
-                            <span id="previewCorreo">—</span>
+                <div class="banner-edit-columns">
+                    <!-- Vista previa mini -->
+                    <div class="banner-edit-col">
+                        <div class="mini-banner">
+                            <div id="miniBannerTitle" class="mini-banner-title"><%= bannerTituloMostrar %></div>
+                            <div id="miniBannerSubtitle" class="mini-banner-subtitle"><%= bannerSubtituloMostrar %></div>
                         </div>
                     </div>
 
-                    <div class="profile-row-inline">
-                        <div>
-                            <span class="label-strong">Ciudad de nacimiento:</span>
-                            <span id="previewCiudadNacimiento">—</span>
-                        </div>
-                        <div>
-                            <span class="label-strong">Ciudad de residencia:</span>
-                            <span id="previewCiudadResidencia">—</span>
-                        </div>
-                    </div>
+                    <!-- Formulario edición banner -->
+                    <div class="banner-edit-col">
+                        <form method="post"
+                              action="<%=request.getContextPath()%>/config-banner"
+                              enctype="multipart/form-data">
+                            <label class="banner-edit-label" for="inputBannerTitulo">Título del banner</label>
+                            <input id="inputBannerTitulo"
+                                   name="bannerTitulo"
+                                   class="banner-edit-input"
+                                   value="<%= (bannerTitulo != null ? bannerTitulo : "") %>">
 
-                    <div class="section-title">Biografía</div>
-                    <div class="section-text" id="previewBiografia">—</div>
+                            <label class="banner-edit-label" for="inputBannerSubtitulo">Subtítulo</label>
+                            <input id="inputBannerSubtitulo"
+                                   name="bannerSubtitulo"
+                                   class="banner-edit-input"
+                                   value="<%= (bannerSubtitulo != null ? bannerSubtitulo : "") %>">
 
-                    <div class="section-title">Experiencia</div>
-                    <div class="section-text" id="previewExperiencia">—</div>
-
-                    <div class="section-title">Enlaces</div>
-                    <div class="section-text" id="previewEnlaces">
-                        GitHub: —  
-                        LinkedIn: —
+                            <button type="submit" class="btn-primary btn-small">Guardar banner</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- TAB EDITAR -->
-    <section id="tab-editar" class="tab-content">
-        <div class="card">
-            <h2>Editar / eliminar perfiles</h2>
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="card">
+        <div class="tabs">
+            <button type="button" class="tab-button active" data-tab="agregar">Agregar perfil</button>
+            <button type="button" class="tab-button" data-tab="editar">Editar perfiles</button>
+            <button type="button" class="tab-button" data-tab="ver">Ver perfiles</button>
+        </div>
+
+        <!-- TAB AGREGAR -->
+        <section id="tab-agregar" class="tab-content active">
+            <div class="main-layout">
+                <!-- Formulario -->
+                <div>
+                    <h2>Agregar o actualizar perfil</h2>
+                    <p style="font-size:13px; margin-top:-4px; margin-bottom:8px;">Mi perfil (formulario)</p>
+
+                    <input type="hidden" id="indiceEdicion" value="-1">
+
+                    <div class="form-group">
+                        <label class="form-label">Nombres</label>
+                        <input class="form-input" id="inputNombres" oninput="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Apellidos</label>
+                        <input class="form-input" id="inputApellidos" oninput="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Edad</label>
+                        <input class="form-input" id="inputEdad" oninput="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Teléfono</label>
+                        <input class="form-input" id="inputTelefono" oninput="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Correo electrónico</label>
+                        <input class="form-input" id="inputCorreo" oninput="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Ciudad de nacimiento</label>
+                        <input class="form-input" id="inputCiudadNacimiento" oninput="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Ciudad de residencia</label>
+                        <input class="form-input" id="inputCiudadResidencia" oninput="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Ocupación / Rol</label>
+                        <input class="form-input" id="inputOcupacion" oninput="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">GitHub</label>
+                        <input class="form-input" id="inputGithub" oninput="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">LinkedIn</label>
+                        <input class="form-input" id="inputLinkedin" oninput="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Biografía</label>
+                        <textarea class="form-textarea" id="inputBiografia" oninput="updatePreview()"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Experiencia</label>
+                        <textarea class="form-textarea" id="inputExperiencia" oninput="updatePreview()"></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="btnCargarFoto">Cargar foto</button>
+                        <button type="button" class="btn-primary" onclick="guardarPerfil()">Guardar cambios</button>
+                        <button type="button" class="btn-danger" onclick="eliminarFormulario()">Eliminar</button>
+                    </div>
+
+                    <!-- input de archivo solo para la foto -->
+                    <input type="file" id="inputFotoPerfil" accept="image/*" style="display:none;">
+                </div>
+
+                <!-- Vista previa rápida -->
+                <div>
+                    <h2>Vista previa rápida</h2>
+
+                    <div class="preview-photo-wrapper">
+                        <% if (fotoUrl != null && !fotoUrl.isEmpty()) { %>
+                            <img id="previewPhotoImg" src="<%= fotoUrl %>" alt="Foto de perfil" style="display:block;">
+                            <div id="previewPhotoText" class="preview-photo-placeholder" style="display:none;">Foto de perfil</div>
+                        <% } else { %>
+                            <img id="previewPhotoImg" src="" alt="Foto de perfil">
+                            <div id="previewPhotoText" class="preview-photo-placeholder">Foto de perfil</div>
+                        <% } %>
+                    </div>
+
+                    <p class="preview-text"><span class="label-strong">Nombre:</span> <span id="previewNombre">—</span></p>
+                    <p class="preview-text"><span class="label-strong">Edad:</span> <span id="previewEdad">—</span></p>
+                    <p class="preview-text"><span class="label-strong">Teléfono:</span> <span id="previewTelefono">—</span></p>
+                    <p class="preview-text"><span class="label-strong">Correo:</span> <span id="previewCorreo">—</span></p>
+                    <p class="preview-text"><span class="label-strong">Ciudad de residencia:</span> <span id="previewCiudadResidencia">—</span></p>
+                    <p class="preview-text"><span class="label-strong">Ocupación:</span> <span id="previewOcupacion">—</span></p>
+                    <p class="preview-text"><span class="label-strong">Biografía:</span> <span id="previewBiografia">—</span></p>
+                    <p class="preview-text"><span class="label-strong">Experiencia:</span> <span id="previewExperiencia">—</span></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB EDITAR -->
+        <section id="tab-editar" class="tab-content">
+            <h2>Editar perfiles</h2>
             <div id="editarListado" class="profiles-list"></div>
-        </div>
-    </section>
+        </section>
 
-    <!-- TAB VER (LISTADO SIMPLE) -->
-    <section id="tab-ver" class="tab-content">
-        <div class="card">
+        <!-- TAB VER -->
+        <section id="tab-ver" class="tab-content">
             <h2>Perfiles registrados</h2>
             <div id="verListado" class="profiles-list"></div>
-        </div>
-    </section>
-
-    <!-- TAB DETALLE (REVISAR PERFIL) -->
-    <section id="tab-detalle" class="tab-content">
-        <div class="card">
-            <div class="profile-title" id="detalleNombreCompleto"></div>
-
-            <div class="profile-photo-placeholder">
-                Foto de perfil
-            </div>
-
-            <div class="profile-grid">
-                <div>
-                    <span class="label-strong">Edad:</span>
-                    <span id="detalleEdad">—</span>
-                </div>
-
-                <div class="profile-row-inline">
-                    <div>
-                        <span class="label-strong">Teléfono:</span>
-                        <span id="detalleTelefono">—</span>
-                    </div>
-                    <div>
-                        <span class="label-strong">Correo:</span>
-                        <span id="detalleCorreo">—</span>
-                    </div>
-                </div>
-
-                <div class="profile-row-inline">
-                    <div>
-                        <span class="label-strong">Ciudad de nacimiento:</span>
-                        <span id="detalleCiudadNacimiento">—</span>
-                    </div>
-                    <div>
-                        <span class="label-strong">Ciudad de residencia:</span>
-                        <span id="detalleCiudadResidencia">—</span>
-                    </div>
-                </div>
-
-                <div class="section-title">Biografía</div>
-                <div class="section-text" id="detalleBiografia">—</div>
-
-                <div class="section-title">Experiencia</div>
-                <div class="section-text" id="detalleExperiencia">—</div>
-
-                <div class="section-title">Enlaces</div>
-                <div class="section-text" id="detalleEnlaces">
-                    GitHub: —  
-                    LinkedIn: —
-                </div>
-            </div>
-
-            <div class="detalle-actions">
-                <button class="btn-secondary" onclick="volverListado()">Volver al listado</button>
-                <button class="btn-primary" onclick="verHabilidades()">Ver habilidades</button>
-            </div>
-        </div>
-    </section>
-
+            <div id="detalleVerPerfil" style="margin-top:16px; display:none;"></div>
+        </section>
+    </div>
 </div>
 
 <script>
-    /* ====== PERSISTENCIA EN LOCALSTORAGE ====== */
+    // ==========================
+    // VARIABLES GLOBALES
+    // ==========================
     const STORAGE_KEY = "perfilesPortafolio";
-
     let perfiles = [];
-    let indiceEdicion = null;
-    let indiceDetalle = null;
+    let indiceEdicion = -1;
+    let fotoGlobalUrl = "<%= (fotoUrl != null ? fotoUrl : "") %>";
 
+    // ==========================
+    // STORAGE
+    // ==========================
     function cargarPerfilesDesdeStorage() {
         const data = localStorage.getItem(STORAGE_KEY);
-        if (data) {
-            try {
-                perfiles = JSON.parse(data);
-            } catch (e) {
-                console.error("Error al leer perfiles del storage", e);
-                perfiles = [];
-            }
+        if (!data) {
+            perfiles = [];
+            return;
+        }
+        try {
+            perfiles = JSON.parse(data) || [];
+        } catch (e) {
+            console.error("Error leyendo perfiles de localStorage", e);
+            perfiles = [];
         }
     }
 
@@ -556,23 +596,41 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify(perfiles));
     }
 
-    // ====== BANNER ======
+    // ==========================
+    // BANNER
+    // ==========================
     function setBannerPortafolio() {
-        document.getElementById("bannerTitle").textContent =
+        const titulo = document.getElementById("bannerTitle");
+        const sub = document.getElementById("bannerSubtitle");
+        if (!titulo || !sub) return;
+        if (!titulo.textContent || titulo.textContent.trim().length === 0) {
+            titulo.textContent = "Bienvenid@ al portafolio de perfiles profesionales";
+        }
+    }
+
+    function syncMiniBannerPreview() {
+        const inputTitulo = document.getElementById("inputBannerTitulo");
+        const inputSub = document.getElementById("inputBannerSubtitulo");
+        const miniTitulo = document.getElementById("miniBannerTitle");
+        const miniSub = document.getElementById("miniBannerSubtitle");
+        const bannerTitulo = document.getElementById("bannerTitle");
+        const bannerSub = document.getElementById("bannerSubtitle");
+
+        if (!inputTitulo || !miniTitulo || !bannerTitulo) return;
+
+        const t = (inputTitulo.value || "").trim() ||
             "Bienvenid@ al portafolio de perfiles profesionales";
-        document.getElementById("bannerSubtitle").textContent =
-            "Aquí podrás encontrar datos personales, datos de contacto, experiencia y enlaces profesionales de diversas personas.";
+        const s = (inputSub ? inputSub.value.trim() : "");
+
+        miniTitulo.textContent = t;
+        if (miniSub) miniSub.textContent = s;
+        bannerTitulo.textContent = t;
+        if (bannerSub) bannerSub.textContent = s;
     }
 
-    function setBannerPerfil(nombres) {
-        const soloNombres = (nombres || "").trim();
-        const textoNombre = soloNombres ? soloNombres : "esta persona";
-        document.getElementById("bannerTitle").textContent =
-            "Bienvenid@ al perfil profesional de " + textoNombre;
-        document.getElementById("bannerSubtitle").textContent = "";
-    }
-
-    // ====== FORMULARIO Y PREVIEW ======
+    // ==========================
+    // FORMULARIO PERFIL
+    // ==========================
     function leerFormulario() {
         return {
             nombres: document.getElementById("inputNombres").value.trim(),
@@ -582,10 +640,12 @@
             correo: document.getElementById("inputCorreo").value.trim(),
             ciudadNacimiento: document.getElementById("inputCiudadNacimiento").value.trim(),
             ciudadResidencia: document.getElementById("inputCiudadResidencia").value.trim(),
+            ocupacion: document.getElementById("inputOcupacion").value.trim(),
+            github: document.getElementById("inputGithub").value.trim(),
+            linkedin: document.getElementById("inputLinkedin").value.trim(),
             biografia: document.getElementById("inputBiografia").value.trim(),
             experiencia: document.getElementById("inputExperiencia").value.trim(),
-            github: document.getElementById("inputGithub").value.trim(),
-            linkedin: document.getElementById("inputLinkedin").value.trim()
+            fotoUrl: fotoGlobalUrl || ""
         };
     }
 
@@ -597,160 +657,129 @@
         document.getElementById("inputCorreo").value = perfil.correo || "";
         document.getElementById("inputCiudadNacimiento").value = perfil.ciudadNacimiento || "";
         document.getElementById("inputCiudadResidencia").value = perfil.ciudadResidencia || "";
-        document.getElementById("inputBiografia").value = perfil.biografia || "";
-        document.getElementById("inputExperiencia").value = perfil.experiencia || "";
+        document.getElementById("inputOcupacion").value = perfil.ocupacion || "";
         document.getElementById("inputGithub").value = perfil.github || "";
         document.getElementById("inputLinkedin").value = perfil.linkedin || "";
+        document.getElementById("inputBiografia").value = perfil.biografia || "";
+        document.getElementById("inputExperiencia").value = perfil.experiencia || "";
+
+        if (perfil.fotoUrl) {
+            fotoGlobalUrl = perfil.fotoUrl;
+        } else {
+            fotoGlobalUrl = "";
+        }
+        actualizarFotoPreview();
         updatePreview();
-        indiceEdicion = null;
     }
 
     function limpiarFormulario() {
+        indiceEdicion = -1;
+        const indice = document.getElementById("indiceEdicion");
+        if (indice) indice.value = "-1";
         cargarFormulario({
-            nombres:"",apellidos:"",edad:"",telefono:"",correo:"",
-            ciudadNacimiento:"",ciudadResidencia:"",
-            biografia:"",experiencia:"",github:"",linkedin:""
+            nombres: "",
+            apellidos: "",
+            edad: "",
+            telefono: "",
+            correo: "",
+            ciudadNacimiento: "",
+            ciudadResidencia: "",
+            ocupacion: "",
+            github: "",
+            linkedin: "",
+            biografia: "",
+            experiencia: "",
+            fotoUrl: ""
         });
-        indiceEdicion = null;
+    }
+
+    // ==========================
+    // VISTA PREVIA
+    // ==========================
+    function actualizarFotoPreview() {
+        const img = document.getElementById("previewPhotoImg");
+        const txt = document.getElementById("previewPhotoText");
+        if (!img) return;
+
+        if (fotoGlobalUrl) {
+            img.src = fotoGlobalUrl;
+            img.style.display = "block";
+            if (txt) txt.style.display = "none";
+        } else {
+            img.style.display = "none";
+            if (txt) txt.style.display = "flex";
+        }
     }
 
     function updatePreview() {
         const p = leerFormulario();
+        const nombreCompleto = (p.nombres + " " + p.apellidos).trim() || "—";
 
-        const nombreCompleto = (p.nombres || p.apellidos)
-            ? (p.nombres + " " + p.apellidos).trim()
-            : "—";
-
-        document.getElementById("previewNombreCompleto").textContent = nombreCompleto;
+        document.getElementById("previewNombre").textContent = nombreCompleto;
         document.getElementById("previewEdad").textContent = p.edad || "—";
         document.getElementById("previewTelefono").textContent = p.telefono || "—";
         document.getElementById("previewCorreo").textContent = p.correo || "—";
-        document.getElementById("previewCiudadNacimiento").textContent = p.ciudadNacimiento || "—";
         document.getElementById("previewCiudadResidencia").textContent = p.ciudadResidencia || "—";
+        document.getElementById("previewOcupacion").textContent = p.ocupacion || "—";
         document.getElementById("previewBiografia").textContent = p.biografia || "—";
         document.getElementById("previewExperiencia").textContent = p.experiencia || "—";
-
-        const enlacesText =
-            "GitHub: " + (p.github || "—") + "\n" +
-            "LinkedIn: " + (p.linkedin || "—");
-        document.getElementById("previewEnlaces").textContent = enlacesText;
     }
 
+    // ==========================
+    // GUARDAR PERFIL
+    // ==========================
     function guardarPerfil() {
-        const perfil = leerFormulario();
+        const p = leerFormulario();
 
-        if (!perfil.nombres && !perfil.apellidos) {
-            alert("Por favor ingresa al menos los nombres o los apellidos.");
+        if (!p.nombres || !p.apellidos || !p.edad) {
+            alert("Para guardar el perfil debes ingresar nombre, apellidos y edad.");
             return;
         }
 
-        if (indiceEdicion === null) {
-            perfiles.push(perfil);
+        if (indiceEdicion >= 0 && indiceEdicion < perfiles.length) {
+            perfiles[indiceEdicion] = p;
         } else {
-            perfiles[indiceEdicion] = perfil;
+            perfiles.push(p);
         }
 
-        // Guardar en localStorage
         guardarPerfilesEnStorage();
-
-        limpiarFormulario();
         renderEditarListado();
         renderVerListado();
-
+        limpiarFormulario();
         setBannerPortafolio();
         activarTab("ver");
-    }
-
-    function agregarHabilidades() {
-        alert("Aquí podrás agregar y gestionar tus habilidades técnicas. (Función en construcción)");
     }
 
     function eliminarFormulario() {
         if (!confirm("¿Deseas borrar los datos del formulario?")) return;
         limpiarFormulario();
-        setBannerPortafolio();
+        updatePreview();
     }
 
-    // ====== LISTAS EDITAR / VER ======
+    // ==========================
+    // LISTADOS
+    // ==========================
     function renderEditarListado() {
         const cont = document.getElementById("editarListado");
+        if (!cont) return;
         cont.innerHTML = "";
 
-        if (perfiles.length === 0) {
-            cont.innerHTML = "<p class='profiles-empty'>Aún no hay perfiles registrados.</p>";
-            return;
-        }
-
-        perfiles.forEach((p, idx) => {
-            const div = document.createElement("div");
-            div.className = "profile-item";
-
-            const main = document.createElement("div");
-            main.className = "profile-item-main";
-            const nombre = (p.nombres + " " + p.apellidos).trim() || "(Sin nombre)";
-
-            main.innerHTML =
-                "<span class='profile-item-name'>" + nombre + "</span>" +
-                "<span class='profile-item-sub'>Edad: " + (p.edad || "—") +
-                " · Teléfono: " + (p.telefono || "—") + "</span>";
-
-            const actions = document.createElement("div");
-            actions.style.display = "flex";
-            actions.style.gap = "6px";
-
-            const btnEdit = document.createElement("button");
-            btnEdit.className = "btn-secondary btn-small";
-            btnEdit.textContent = "Editar";
-            btnEdit.onclick = () => {
-                indiceEdicion = idx;
-                cargarFormulario(perfiles[idx]);
-                setBannerPortafolio();
-                activarTab("agregar");
-            };
-
-            const btnDel = document.createElement("button");
-            btnDel.className = "btn-danger btn-small";
-            btnDel.textContent = "Eliminar";
-            btnDel.onclick = () => {
-                if (!confirm("¿Eliminar este perfil?")) return;
-                perfiles.splice(idx, 1);
-
-                // Guardar cambios en localStorage
-                guardarPerfilesEnStorage();
-
-                renderEditarListado();
-                renderVerListado();
-                if (perfiles.length === 0) {
-                    setBannerPortafolio();
-                }
-            };
-
-            actions.appendChild(btnEdit);
-            actions.appendChild(btnDel);
-
-            div.appendChild(main);
-            div.appendChild(actions);
-
-            cont.appendChild(div);
-        });
-    }
-
-    function renderVerListado() {
-        const cont = document.getElementById("verListado");
-        cont.innerHTML = "";
-
-        if (perfiles.length === 0) {
-            cont.innerHTML = "<p class='profiles-empty'>Aún no hay perfiles registrados.</p>";
-            return;
-        }
-
-        perfiles.forEach((p, idx) => {
+        perfiles.forEach(function (p, idx) {
             const item = document.createElement("div");
             item.className = "profile-list-item";
 
-            const foto = document.createElement("div");
-            foto.className = "profile-list-photo";
-            foto.textContent = "Foto";
+            const main = document.createElement("div");
+            main.className = "profile-list-main";
+
+            const fotoCaja = document.createElement("div");
+            fotoCaja.className = "profile-list-photo-mini";
+            if (p.fotoUrl) {
+                const img = document.createElement("img");
+                img.src = p.fotoUrl;
+                fotoCaja.appendChild(img);
+            } else {
+                fotoCaja.textContent = "Foto";
+            }
 
             const text = document.createElement("div");
             text.className = "profile-list-text";
@@ -759,85 +788,259 @@
             const edad = p.edad || "—";
             const bio = p.biografia || "Sin biografía registrada.";
 
-            text.innerHTML =
-                "<div class='profile-list-name'>" + nombre + "</div>" +
-                "<div class='profile-list-meta'>Edad: " + edad + "</div>" +
-                "<div class='profile-list-bio'>" + bio + "</div>";
+            const nameNode = document.createElement("div");
+            nameNode.className = "profile-list-name";
+            nameNode.textContent = nombre;
+
+            const metaNode = document.createElement("div");
+            metaNode.className = "profile-list-meta";
+            metaNode.textContent = "Edad: " + edad + " · " + (p.ocupacion || "Sin ocupación");
+
+            const bioNode = document.createElement("div");
+            bioNode.className = "profile-list-bio";
+            bioNode.textContent = bio.length > 70 ? bio.substring(0, 67) + "..." : bio;
+
+            text.appendChild(nameNode);
+            text.appendChild(metaNode);
+            text.appendChild(bioNode);
+
+            main.appendChild(fotoCaja);
+            main.appendChild(text);
 
             const actions = document.createElement("div");
-            const btnVer = document.createElement("button");
-            btnVer.className = "btn-primary btn-small";
-            btnVer.textContent = "Revisar perfil";
-            btnVer.onclick = () => revisarPerfil(idx);
-            actions.appendChild(btnVer);
+            actions.className = "profile-list-actions";
 
-            item.appendChild(foto);
-            item.appendChild(text);
+            const btnEditar = document.createElement("button");
+            btnEditar.className = "btn-secondary btn-small";
+            btnEditar.textContent = "Editar";
+            btnEditar.onclick = function () {
+                indiceEdicion = idx;
+                const indice = document.getElementById("indiceEdicion");
+                if (indice) indice.value = String(idx);
+                cargarFormulario(p);
+                activarTab("agregar");
+            };
+
+            const btnEliminar = document.createElement("button");
+            btnEliminar.className = "btn-danger btn-small";
+            btnEliminar.textContent = "Eliminar";
+            btnEliminar.onclick = function () {
+                if (!confirm("¿Eliminar este perfil?")) return;
+                perfiles.splice(idx, 1);
+                guardarPerfilesEnStorage();
+                renderEditarListado();
+                renderVerListado();
+            };
+
+            actions.appendChild(btnEditar);
+            actions.appendChild(btnEliminar);
+
+            item.appendChild(main);
             item.appendChild(actions);
-
             cont.appendChild(item);
         });
     }
 
-    // ====== DETALLE PERFIL ======
-    function revisarPerfil(idx) {
-        const p = perfiles[idx];
-        if (!p) return;
-        indiceDetalle = idx;
+    function renderVerListado() {
+        const cont = document.getElementById("verListado");
+        if (!cont) return;
+        cont.innerHTML = "";
+
+        perfiles.forEach(function (p) {
+            const item = document.createElement("div");
+            item.className = "profile-list-item";
+
+            const main = document.createElement("div");
+            main.className = "profile-list-main";
+
+            const fotoCaja = document.createElement("div");
+            fotoCaja.className = "profile-list-photo-mini";
+            if (p.fotoUrl) {
+                const img = document.createElement("img");
+                img.src = p.fotoUrl;
+                fotoCaja.appendChild(img);
+            } else {
+                fotoCaja.textContent = "Foto";
+            }
+
+            const text = document.createElement("div");
+            text.className = "profile-list-text";
+
+            const nombre = (p.nombres + " " + p.apellidos).trim() || "(Sin nombre)";
+            const edad = p.edad || "—";
+
+            const nameNode = document.createElement("div");
+            nameNode.className = "profile-list-name";
+            nameNode.textContent = nombre;
+
+            const metaNode = document.createElement("div");
+            metaNode.className = "profile-list-meta";
+            metaNode.textContent = "Edad: " + edad + " · " + (p.ocupacion || "Sin ocupación");
+
+            text.appendChild(nameNode);
+            text.appendChild(metaNode);
+
+            main.appendChild(fotoCaja);
+            main.appendChild(text);
+
+            const actions = document.createElement("div");
+            actions.className = "profile-list-actions";
+
+            const btnVerMas = document.createElement("button");
+            btnVerMas.className = "btn-soft btn-small";
+            btnVerMas.textContent = "Ver más";
+            btnVerMas.onclick = function () {
+                mostrarDetallePerfil(p);
+            };
+
+            actions.appendChild(btnVerMas);
+
+            item.appendChild(main);
+            item.appendChild(actions);
+            cont.appendChild(item);
+        });
+    }
+
+    function mostrarDetallePerfil(p) {
+        const cont = document.getElementById("detalleVerPerfil");
+        if (!cont) return;
+
+        cont.style.display = "block";
 
         const nombreCompleto = (p.nombres + " " + p.apellidos).trim() || "(Sin nombre)";
+        const edad = p.edad || "—";
+        const telefono = p.telefono || "—";
+        const correo = p.correo || "—";
+        const ciudadNac = p.ciudadNacimiento || "—";
+        const ciudadRes = p.ciudadResidencia || "—";
+        const ocupacion = p.ocupacion || "—";
+        const github = p.github || "";
+        const linkedin = p.linkedin || "";
+        const biografia = p.biografia || "—";
+        const experiencia = p.experiencia || "—";
 
-        document.getElementById("detalleNombreCompleto").textContent = nombreCompleto;
-        document.getElementById("detalleEdad").textContent = p.edad || "—";
-        document.getElementById("detalleTelefono").textContent = p.telefono || "—";
-        document.getElementById("detalleCorreo").textContent = p.correo || "—";
-        document.getElementById("detalleCiudadNacimiento").textContent = p.ciudadNacimiento || "—";
-        document.getElementById("detalleCiudadResidencia").textContent = p.ciudadResidencia || "—";
-        document.getElementById("detalleBiografia").textContent = p.biografia || "—";
-        document.getElementById("detalleExperiencia").textContent = p.experiencia || "—";
+        let html = "";
+        html += '<div style="margin-top:8px; padding:16px 14px; background:#fff7ed; border-radius:16px; border:1px solid #fed7aa;">';
+        html += '  <div class="profile-title" style="margin-bottom:10px;">Detalle del perfil</div>';
+        html += '  <div style="display:flex; gap:16px; flex-wrap:wrap; align-items:flex-start;">';
 
-        const enlacesText =
-            "GitHub: " + (p.github || "—") + "\n" +
-            "LinkedIn: " + (p.linkedin || "—");
-        document.getElementById("detalleEnlaces").textContent = enlacesText;
+        html += '    <div class="preview-photo-wrapper" style="width:140px; height:140px;">';
+        if (p.fotoUrl) {
+            html += '      <img src="' + p.fotoUrl + '" alt="Foto de perfil" style="display:block;">';
+        } else {
+            html += '      <div class="preview-photo-placeholder">Sin foto</div>';
+        }
+        html += '    </div>';
 
-        setBannerPerfil(p.nombres);
-        activarTab("detalle");
+        html += '    <div style="flex:1; min-width:220px;">';
+        html += '      <p class="preview-text"><span class="label-strong">Nombre:</span> ' + nombreCompleto + '</p>';
+        html += '      <p class="preview-text"><span class="label-strong">Edad:</span> ' + edad + '</p>';
+        html += '      <p class="preview-text"><span class="label-strong">Teléfono:</span> ' + telefono + '</p>';
+        html += '      <p class="preview-text"><span class="label-strong">Correo:</span> ' + correo + '</p>';
+        html += '      <p class="preview-text"><span class="label-strong">Ciudad de nacimiento:</span> ' + ciudadNac + '</p>';
+        html += '      <p class="preview-text"><span class="label-strong">Ciudad de residencia:</span> ' + ciudadRes + '</p>';
+        html += '      <p class="preview-text"><span class="label-strong">Ocupación:</span> ' + ocupacion + '</p>';
+
+        if (github) {
+            html += '      <p class="preview-text"><span class="label-strong">GitHub:</span> <a href="' + github + '" target="_blank">' + github + '</a></p>';
+        }
+        if (linkedin) {
+            html += '      <p class="preview-text"><span class="label-strong">LinkedIn:</span> <a href="' + linkedin + '" target="_blank">' + linkedin + '</a></p>';
+        }
+
+        html += '    </div>';
+        html += '  </div>';
+
+        html += '  <div style="margin-top:12px;">';
+        html += '    <p class="preview-text"><span class="label-strong">Biografía:</span> ' + biografia + '</p>';
+        html += '    <p class="preview-text"><span class="label-strong">Experiencia:</span> ' + experiencia + '</p>';
+        html += '  </div>';
+
+        html += '</div>';
+
+        cont.innerHTML = html;
     }
 
-    function volverListado() {
-        setBannerPortafolio();
-        activarTab("ver");
-    }
-
-    function verHabilidades() {
-        alert("Aquí podrías mostrar el portafolio de habilidades de la persona. (Función pendiente)");
-    }
-
-    // ====== TABS ======
+    // ==========================
+    // TABS
+    // ==========================
     function activarTab(nombre) {
-        document.querySelectorAll(".tab-button").forEach(btn => {
+        document.querySelectorAll(".tab-button").forEach(function (btn) {
             btn.classList.toggle("active", btn.dataset.tab === nombre);
         });
-
-        document.querySelectorAll(".tab-content").forEach(sec => {
+        document.querySelectorAll(".tab-content").forEach(function (sec) {
             sec.classList.toggle("active", sec.id === "tab-" + nombre);
         });
     }
 
-    document.querySelectorAll(".tab-button").forEach(btn => {
-        btn.addEventListener("click", () => {
-            activarTab(btn.dataset.tab);
-            setBannerPortafolio();
+    document.querySelectorAll(".tab-button").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+            const tab = btn.dataset.tab;
+            activarTab(tab);
+            if (tab === "ver") {
+                setBannerPortafolio();
+            }
         });
     });
 
-    // ====== ESTADO INICIAL ======
+    // ==========================
+    // FOTO
+    // ==========================
+    const btnCargarFoto = document.getElementById("btnCargarFoto");
+    const inputFoto = document.getElementById("inputFotoPerfil");
+
+    if (btnCargarFoto && inputFoto) {
+        btnCargarFoto.addEventListener("click", function () {
+            inputFoto.click();
+        });
+
+        inputFoto.addEventListener("change", function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (ev) {
+                fotoGlobalUrl = ev.target.result;
+                actualizarFotoPreview();
+                updatePreview();
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // ==========================
+    // BANNER: abrir / cerrar
+    // ==========================
+    const toggleBannerEdit = document.getElementById("toggleBannerEdit");
+    const closeBannerEdit = document.getElementById("closeBannerEdit");
+    const bannerEditPanel = document.getElementById("bannerEditPanel");
+
+    if (toggleBannerEdit && bannerEditPanel) {
+        toggleBannerEdit.addEventListener("click", function () {
+            bannerEditPanel.classList.add("open");
+        });
+    }
+    if (closeBannerEdit && bannerEditPanel) {
+        closeBannerEdit.addEventListener("click", function () {
+            bannerEditPanel.classList.remove("open");
+        });
+    }
+
+    const inputBannerTitulo = document.getElementById("inputBannerTitulo");
+    const inputBannerSubtitulo = document.getElementById("inputBannerSubtitulo");
+    if (inputBannerTitulo) inputBannerTitulo.addEventListener("input", syncMiniBannerPreview);
+    if (inputBannerSubtitulo) inputBannerSubtitulo.addEventListener("input", syncMiniBannerPreview);
+
+    // ==========================
+    // ESTADO INICIAL
+    // ==========================
     cargarPerfilesDesdeStorage();
-    setBannerPortafolio();
-    limpiarFormulario();
     renderEditarListado();
     renderVerListado();
+    limpiarFormulario();
+    actualizarFotoPreview();
+    updatePreview();
+    setBannerPortafolio();
 </script>
 
 </body>

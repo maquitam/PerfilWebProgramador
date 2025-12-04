@@ -5,6 +5,8 @@ servicios\HabilidadEdicionServlet.class
 servicios\VistaPerfilServlet.class
 servicios\PerfilServlet.class
 objetos\VistaPerfil.class
+bannerfoto\BannerConfig.class
 repositorio\VistaPerfilRepositorio.class
+servicios\BannerConfigServlet.class
 repositorio\HabilidadRepositorio.class
 servicios\HabilidadServlet.class
