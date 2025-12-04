@@ -581,6 +581,16 @@
                     GitHub: —  
                     LinkedIn: —
                 </div>
+            </div>      
+            <br>
+            <h2 class="habilities">Habilidades</h2>
+            <div id="porcentajesHabilidades">  
+                <svg viewBox="-17 -17 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg)">
+                    <text id="detalleNombreHabilidad" class="habilityname" x="70" y="-3" style="transform:rotate(90deg) translate(0px, -145px)">—</text>
+                    <circle class="backcircle"></circle>
+                    <circle id="detalleFrontCircle" class="frontcircle" stroke-dashoffset="150px"></circle>
+                    <text id="detallePorcentajeHabilidad" class="textpercent" x="35px" y="80px" style="transform:rotate(90deg) translate(0px, -138px)">—</text>
+                </svg>
             </div>
 
             <div class="detalle-actions">
@@ -673,7 +683,7 @@
         cargarFormulario({
             nombres:"",apellidos:"",edad:"",telefono:"",correo:"",
             ciudadNacimiento:"",ciudadResidencia:"",
-            biografia:"",experiencia:"",github:"",linkedin:""
+            biografia:"",experiencia:"",github:"",linkedin:"",nombreHabilidad:"",porcentajeHabilidad:""
         });
         indiceEdicion = null;
     }
@@ -862,7 +872,9 @@
         document.getElementById("detalleCiudadResidencia").textContent = p.ciudadResidencia || "—";
         document.getElementById("detalleBiografia").textContent = p.biografia || "—";
         document.getElementById("detalleExperiencia").textContent = p.experiencia || "—";
-
+        document.getElementById("detalleNombreHabilidad").textContent = p.nombreHabilidad.toUpperCase() || "—";
+        document.getElementById("detallePorcentajeHabilidad").textContent = p.porcentajeHabilidad + "%" || "—";
+        document.getElementById("detalleFrontCircle").setAttribute("stroke-dashoffset",-(364 * p.porcentajeHabilidad / 100 - 364));
         const enlacesText =
             "GitHub: " + (p.github || "—") + "\n" +
             "LinkedIn: " + (p.linkedin || "—");
