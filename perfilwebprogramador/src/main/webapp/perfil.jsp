@@ -451,7 +451,6 @@
         }
     </style>
 </head>
-</head>
 <body>
 <div class="page-container">
 
@@ -572,51 +571,14 @@
                         <label class="form-label">Experiencia</label>
                         <textarea class="form-textarea" id="inputExperiencia" oninput="updatePreview()"></textarea>
                     </div>
-                    <!-- Habilidades hardcodeadas -->
-                    <div class="form-group">
-                        <label class="form-label">Habilidad 1</label>
-                        <input class="form-input" id="inputNombreHabilidad1" placeholder="JAVA" oninput="updatePreview()">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Porcentaje Habilidad 1</label>
-                        <input type="number" min="0" max="100" placeholder="60" class="form-input" id="inputPorcentajeHabilidad1" oninput="updatePreview()">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Habilidad 2</label>
-                        <input class="form-input" id="inputNombreHabilidad2" placeholder="Python" oninput="updatePreview()">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Porcentaje Habilidad 2</label>
-                        <input type="number" min="0" max="100" placeholder="75" class="form-input" id="inputPorcentajeHabilidad2" oninput="updatePreview()">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Habilidad 3</label>
-                        <input class="form-input" id="inputNombreHabilidad3" placeholder="JavaScript" oninput="updatePreview()">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Porcentaje Habilidad 3</label>
-                        <input type="number" min="0" max="100" placeholder="80" class="form-input" id="inputPorcentajeHabilidad3" oninput="updatePreview()">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Habilidad 4</label>
-                        <input class="form-input" id="inputNombreHabilidad4" placeholder="React" oninput="updatePreview()">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Porcentaje Habilidad 4</label>
-                        <input type="number" min="0" max="100" placeholder="70" class="form-input" id="inputPorcentajeHabilidad4" oninput="updatePreview()">
-                    </div>
-
                     <div id="nuevaHabilidad">
                         <div class="form-group">
-                            <label class="form-label">Habilidad 5</label>
+                            <label class="form-label">Nombre Habilidad</label>
                             <input class="form-input" id="inputNombreHabilidad" placeholder="JAVA" oninput="updatePreview()">
                         </div>
                 
                         <div class="form-group">
-                            <label class="form-label">Porcentaje Habilidad 5</label>
+                            <label class="form-label">Porcentaje Habilidad</label>
                             <input type="number" min="0" max="100" placeholder="60" class="form-input" id="inputPorcentajeHabilidad" oninput="updatePreview()">
                         </div>
                     </div>
@@ -664,31 +626,6 @@
                             <circle id="frontcircle" class="frontcircle" stroke-dashoffset="-364px"></circle>
                             <text id="previewPorcentajeHabilidad" class="textpercent" x="35px" y="80px" style="transform:rotate(90deg) translate(0px, -138px)">—</text>
                         </svg>
-                        <!-- Habilidades hardcodeadas 1-4 -->
-                        <svg id="progressHabilidad_1" viewBox="-17 -17 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg); display:none;">
-                            <text id="previewNombreHabilidad_1" class="habilityname" x="70" y="-3" style="transform:rotate(90deg) translate(0px, -145px)">—</text>
-                            <circle class="backcircle"></circle>
-                            <circle id="frontcircle_1" class="frontcircle" stroke-dashoffset="-364px"></circle>
-                            <text id="previewPorcentajeHabilidad_1" class="textpercent" x="35px" y="80px" style="transform:rotate(90deg) translate(0px, -138px)">—</text>
-                        </svg>
-                        <svg id="progressHabilidad_2" viewBox="-17 -17 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg); display:none;">
-                            <text id="previewNombreHabilidad_2" class="habilityname" x="70" y="-3" style="transform:rotate(90deg) translate(0px, -145px)">—</text>
-                            <circle class="backcircle"></circle>
-                            <circle id="frontcircle_2" class="frontcircle" stroke-dashoffset="-364px"></circle>
-                            <text id="previewPorcentajeHabilidad_2" class="textpercent" x="35px" y="80px" style="transform:rotate(90deg) translate(0px, -138px)">—</text>
-                        </svg>
-                        <svg id="progressHabilidad_3" viewBox="-17 -17 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg); display:none;">
-                            <text id="previewNombreHabilidad_3" class="habilityname" x="70" y="-3" style="transform:rotate(90deg) translate(0px, -145px)">—</text>
-                            <circle class="backcircle"></circle>
-                            <circle id="frontcircle_3" class="frontcircle" stroke-dashoffset="-364px"></circle>
-                            <text id="previewPorcentajeHabilidad_3" class="textpercent" x="35px" y="80px" style="transform:rotate(90deg) translate(0px, -138px)">—</text>
-                        </svg>
-                        <svg id="progressHabilidad_4" viewBox="-17 -17 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg); display:none;">
-                            <text id="previewNombreHabilidad_4" class="habilityname" x="70" y="-3" style="transform:rotate(90deg) translate(0px, -145px)">—</text>
-                            <circle class="backcircle"></circle>
-                            <circle id="frontcircle_4" class="frontcircle" stroke-dashoffset="-364px"></circle>
-                            <text id="previewPorcentajeHabilidad_4" class="textpercent" x="35px" y="80px" style="transform:rotate(90deg) translate(0px, -138px)">—</text>
-                        </svg>
                         <span id="nuevaHabilidadPreview"></span>
                     </div>
                 </div>
@@ -718,7 +655,7 @@
     let perfiles = [];
     let indiceEdicion = -1;
     let fotoGlobalUrl = "<%= (fotoUrl != null ? fotoUrl : "") %>";
-    
+    let contador = 0;
     // ==========================
     // STORAGE
     // ==========================
@@ -777,26 +714,13 @@
     // ==========================
     function leerFormulario() {
         const habilidades = [];
-        
-        // Leer habilidades hardcodeadas
-        for (let i = 1; i <= 4; i++) {
-            const nombre = document.getElementById("inputNombreHabilidad" + i)?.value.trim() || "";
-            const porcentaje = document.getElementById("inputPorcentajeHabilidad" + i)?.value.trim() || "";
-            if (nombre) {
-                habilidades.push({
-                    nombre: nombre,
-                    porcentaje: porcentaje
-                });
-            }
-        }
-        
-        // Leer habilidades dinámicas
         for (let i = 0; i < contador; i++) {
             const nombre = document.getElementById("inputNombreHabilidad_" + i)?.value.trim() || "";
             const porcentaje = document.getElementById("inputPorcentajeHabilidad_" + i)?.value.trim() || "";
             habilidades.push({
                 nombre: nombre,
                 porcentaje: porcentaje
+                
             });
         }
         return {
@@ -815,14 +739,6 @@
             experiencia: document.getElementById("inputExperiencia").value.trim(),
             nombreHabilidad: document.getElementById("inputNombreHabilidad").value.trim(),
             porcentajeHabilidad: document.getElementById("inputPorcentajeHabilidad").value.trim(),
-            habilidad1: document.getElementById("inputNombreHabilidad1").value.trim(),
-            porcentaje1: document.getElementById("inputPorcentajeHabilidad1").value.trim(),
-            habilidad2: document.getElementById("inputNombreHabilidad2").value.trim(),
-            porcentaje2: document.getElementById("inputPorcentajeHabilidad2").value.trim(),
-            habilidad3: document.getElementById("inputNombreHabilidad3").value.trim(),
-            porcentaje3: document.getElementById("inputPorcentajeHabilidad3").value.trim(),
-            habilidad4: document.getElementById("inputNombreHabilidad4").value.trim(),
-            porcentaje4: document.getElementById("inputPorcentajeHabilidad4").value.trim(),
             fotoUrl: fotoGlobalUrl || ""
             
         };
@@ -843,16 +759,14 @@
         document.getElementById("inputExperiencia").value = perfil.experiencia || "";
         document.getElementById("inputNombreHabilidad").value = perfil.nombreHabilidad || "";
         document.getElementById("inputPorcentajeHabilidad").value = perfil.porcentajeHabilidad|| "";
-        
-        // Cargar habilidades hardcodeadas
-        document.getElementById("inputNombreHabilidad1").value = perfil.habilidad1 || "";
-        document.getElementById("inputPorcentajeHabilidad1").value = perfil.porcentaje1 || "";
-        document.getElementById("inputNombreHabilidad2").value = perfil.habilidad2 || "";
-        document.getElementById("inputPorcentajeHabilidad2").value = perfil.porcentaje2 || "";
-        document.getElementById("inputNombreHabilidad3").value = perfil.habilidad3 || "";
-        document.getElementById("inputPorcentajeHabilidad3").value = perfil.porcentaje3 || "";
-        document.getElementById("inputNombreHabilidad4").value = perfil.habilidad4 || "";
-        document.getElementById("inputPorcentajeHabilidad4").value = perfil.porcentaje4 || "";
+              
+       /* if(perfil.habilidades.length > 0){
+            for (let z = 0 ; z < perfil.habilidades.length; z++) {
+            agregarHabilidades();
+            document.getElementById("inputNombreHabilidad_" + z).value = perfil.habilidades[z].nombre|| "";
+            document.getElementById("inputPorcentajeHabilidad_" + z).value = perfil..habilidades[z].porcentaje|| "";
+        }
+    }*/
 
         if (perfil.fotoUrl) {
             fotoGlobalUrl = perfil.fotoUrl;
@@ -865,7 +779,7 @@
 
     function limpiarFormulario() {   
         eliminarAllHabilidades();
-        ineliminarAllHabilidades();diceEdicion = -1;
+        diceEdicion = -1;
         const indice = document.getElementById("indiceEdicion");
         if (indice) indice.value = "-1";
         cargarFormulario({
@@ -883,17 +797,8 @@
             experiencia: "",
             fotoUrl: "",
             nombreHabilidad:"",
-            porcentajeHabilidad:"",
-            habilidad1: "",
-            porcentaje1: "",
-            habilidad2: "",
-            porcentaje2: "",
-            habilidad3: "",
-            porcentaje3: "",
-            habilidad4: "",
-            porcentaje4: ""
+            porcentajeHabilidad:""
         });
-        eliminarAllHabilidades();
     }
 
     // ==========================
@@ -931,37 +836,6 @@
         document.getElementById("previewPorcentajeHabilidad").textContent = p.porcentajeHabilidad + "%" || "—";
         document.getElementById("frontcircle").setAttribute("stroke-dashoffset",-(364 * p.porcentajeHabilidad / 100 - 364));
 
-        // Actualizar habilidades hardcodeadas en preview
-        for (let i = 1; i <= 4; i++) {
-            const nombreElementId = "previewNombreHabilidad_" + i;
-            const porcentajeElementId = "previewPorcentajeHabilidad_" + i;
-            const frontcircleElementId = "frontcircle_" + i;
-            const svgElementId = "progressHabilidad_" + i;
-            
-            const nombreElement = document.getElementById(nombreElementId);
-            const porcentajeElement = document.getElementById(porcentajeElementId);
-            const frontcircleElement = document.getElementById(frontcircleElementId);
-            const svgElement = document.getElementById(svgElementId);
-            
-            if (nombreElement && porcentajeElement && frontcircleElement && svgElement) {
-                const habilidadKey = "habilidad" + i;
-                const porcentajeKey = "porcentaje" + i;
-                
-                const habilidadValor = p[habilidadKey] || "";
-                const porcentajeValor = p[porcentajeKey] || "";
-                
-                // Mostrar u ocultar el SVG según si hay valor
-                if (habilidadValor) {
-                    svgElement.style.display = "inline";
-                    nombreElement.textContent = habilidadValor.toUpperCase();
-                    porcentajeElement.textContent = porcentajeValor + "%";
-                    frontcircleElement.setAttribute("stroke-dashoffset", -(364 * (porcentajeValor || 0) / 100 - 364));
-                } else {
-                    svgElement.style.display = "none";
-                }
-            }
-        }
-
         for (let i = 0; i < contador; i++) {
             document.getElementById("previewNombreHabilidad_" + i).textContent = p.habilidades[i].nombre.toUpperCase() || "—";
             document.getElementById("previewPorcentajeHabilidad_" + i).textContent = p.habilidades[i].porcentaje + "%" || "—";
@@ -994,7 +868,6 @@
         activarTab("ver");
     }
     
-    let contador = 0;
     function agregarHabilidades() {
         let plantilla = document.getElementById("nuevaHabilidad");
         let plantilla1 = document.getElementById("progressHabilidad");
@@ -1011,21 +884,10 @@
         let nombreInput = copia.querySelector("#inputNombreHabilidad");
         let porcentajeInput = copia.querySelector("#inputPorcentajeHabilidad");
         
-        // Cambiar los labels a solo "Habilidad" y "Porcentaje" sin números
-        let labelNombre = copia.querySelector(".form-group:first-child .form-label");
-        if (labelNombre) {
-            labelNombre.textContent = "Habilidad";
-        }
-        
-        let labelPorcentaje = copia.querySelector(".form-group:last-child .form-label");
-        if (labelPorcentaje) {
-            labelPorcentaje.textContent = "Porcentaje";
-        }
-        
         let nombreHabilidadText = copia1.querySelector("#previewNombreHabilidad");
         let porcentajeHabilidadText = copia1.querySelector("#previewPorcentajeHabilidad");
         let frontCircle = copia1.querySelector("#frontcircle");
-
+        
         nombreInput.id = "inputNombreHabilidad_" + contador;
         nombreInput.value = "";
         
@@ -1034,13 +896,13 @@
         
         nombreHabilidadText.id = "previewNombreHabilidad_" + contador;
         nombreHabilidadText.textContent = "—";
-        
+               
         porcentajeHabilidadText.id = "previewPorcentajeHabilidad_" + contador;
         porcentajeHabilidadText.textContent = "%";
         
         frontCircle.id = "frontcircle_" + contador;
         frontCircle.setAttribute("stroke-dashoffset", 364);
-            
+                  
         document.getElementById("nuevaHabilidadForm").appendChild(copia);
         document.getElementById("nuevaHabilidadPreview").appendChild(copia1);
         
@@ -1133,7 +995,7 @@
             const btnEditar = document.createElement("button");
             btnEditar.className = "btn-secondary btn-small";
             btnEditar.textContent = "Editar";
-            btnEditar.onclick = function () {
+            btnEditar.onclick = function () {      
                 indiceEdicion = idx;
                 const indice = document.getElementById("indiceEdicion");
                 if (indice) indice.value = String(idx);
@@ -1240,9 +1102,7 @@
         const experiencia = p.experiencia || "—";
         const nombreHabilidad = p.nombreHabilidad || "—";
         const porcentajeHabilidad = p.porcentajeHabilidad || "—";
-        
-       
-
+             
         let html = "";
         html += '<div style="margin-top:8px; padding:16px 14px; background:#fff7ed; border-radius:16px; border:1px solid #fed7aa;">';
         html += '  <div class="profile-title" style="margin-bottom:10px;">Detalle del perfil</div>';
@@ -1280,6 +1140,7 @@
         html += '    <p class="preview-text"><span class="label-strong">Experiencia:</span> ' + experiencia + '</p>';
         html += '  </div>';
 
+        //html += '</div>';
         
         
         html += '<h2 class="habilities">' + 'Habilidades' + '</h2>';
@@ -1292,7 +1153,8 @@
         html +=         '<text class="textpercent" x="35px" y="80px" style="transform:rotate(90deg) translate(0px, -138px)">' + p.porcentajeHabilidad + '%' + '</text>';
         html +=     '</svg>';
             
-        for (let i = 0; i < contador; i++) {
+        for (let i = 0; i < p.habilidades.length; i++) {
+        agregarHabilidades();
         html +=     '<svg viewBox="-17 -17 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg)">';
         html +=         '<text  class="habilityname" x="70" y="-3" style="transform:rotate(90deg) translate(0px, -145px)">' + p.habilidades[i].nombre.toUpperCase()+ '</text>';
         html +=         '<circle class="backcircle">' + '</circle>';
@@ -1303,11 +1165,13 @@
         html += '</div>';
         cont.innerHTML = html;
     }
+    
 
     // ==========================
     // TABS
     // ==========================
     function activarTab(nombre) {
+        eliminarAllHabilidades();
         document.querySelectorAll(".tab-button").forEach(function (btn) {
             btn.classList.toggle("active", btn.dataset.tab === nombre);
         });
@@ -1388,5 +1252,3 @@
 
 </body>
 </html>
-
-
