@@ -760,13 +760,12 @@
         document.getElementById("inputNombreHabilidad").value = perfil.nombreHabilidad || "";
         document.getElementById("inputPorcentajeHabilidad").value = perfil.porcentajeHabilidad|| "";
               
-       /* if(perfil.habilidades.length > 0){
+        if(perfil.habilidades.length > 0){
             for (let z = 0 ; z < perfil.habilidades.length; z++) {
-            agregarHabilidades();
             document.getElementById("inputNombreHabilidad_" + z).value = perfil.habilidades[z].nombre|| "";
-            document.getElementById("inputPorcentajeHabilidad_" + z).value = perfil..habilidades[z].porcentaje|| "";
+            document.getElementById("inputPorcentajeHabilidad_" + z).value = perfil.habilidades[z].porcentaje|| "";
+            }
         }
-    }*/
 
         if (perfil.fotoUrl) {
             fotoGlobalUrl = perfil.fotoUrl;
@@ -859,13 +858,12 @@
         } else {
             perfiles.push(p);
         }
-
+        activarTab("ver");
         guardarPerfilesEnStorage();
         renderEditarListado();
         renderVerListado();
         limpiarFormulario();
         setBannerPortafolio();
-        activarTab("ver");
     }
     
     function agregarHabilidades() {
@@ -998,9 +996,12 @@
             btnEditar.onclick = function () {      
                 indiceEdicion = idx;
                 const indice = document.getElementById("indiceEdicion");
-                if (indice) indice.value = String(idx);
-                cargarFormulario(p);
+                if (indice) indice.value = String(idx);            
                 activarTab("agregar");
+                for(let i = 0; i < p.habilidades.length; i++){
+                    agregarHabilidades();
+                }
+                cargarFormulario(p);  
             };
 
             const btnEliminar = document.createElement("button");
@@ -1084,6 +1085,11 @@
     }
 
     function mostrarDetallePerfil(p) {
+        window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth"
+        });
+
         const cont = document.getElementById("detalleVerPerfil");
         if (!cont) return;
 
