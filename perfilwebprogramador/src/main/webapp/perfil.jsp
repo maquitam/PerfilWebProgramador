@@ -865,19 +865,15 @@
     function agregarHabilidades() {
         let plantilla = document.getElementById("nuevaHabilidad");
         let plantilla1 = document.getElementById("progressHabilidad");
-       // let plantilla2 = document.getElementById("detalleHabilidad");
         
         let copia = plantilla.cloneNode(true);
         let copia1 = plantilla1.cloneNode(true);
-        //let copia2 = plantilla2.cloneNode(true);
         
         copia.style.display = "block";
         copia1.style.display = "inline";
-        //copia2.style.display = "inline";
 
         copia.id = "habilidades_" + contador;
         copia1.id = "habilidadProgress_" + contador;
-        //copia2.id = "habilidadProgressDatalle_" + contador;
 
         let nombreInput = copia.querySelector("#inputNombreHabilidad");
         let porcentajeInput = copia.querySelector("#inputPorcentajeHabilidad");
@@ -885,10 +881,6 @@
         let nombreHabilidadText = copia1.querySelector("#previewNombreHabilidad");
         let porcentajeHabilidadText = copia1.querySelector("#previewPorcentajeHabilidad");
         let frontCircle = copia1.querySelector("#frontcircle");
-        
-        //let nombreHabilidadTextDetalle = copia2.querySelector("#detalleNombreHabilidad");
-       // let porcentajeHabilidadTextDetalle = copia2.querySelector("#detallePorcentajeHabilidad");
-        //let frontCircleDetalle = copia2.querySelector("#detalleFrontCircle");
 
         nombreInput.id = "inputNombreHabilidad_" + contador;
         nombreInput.value = "";
@@ -899,24 +891,14 @@
         nombreHabilidadText.id = "previewNombreHabilidad_" + contador;
         nombreHabilidadText.textContent = "—";
         
-       //nombreHabilidadTextDetalle.id = "detalleNombreHabilidad_" + contador;
-        //nombreHabilidadTextDetalle.textContent = "—";
-        
         porcentajeHabilidadText.id = "previewPorcentajeHabilidad_" + contador;
         porcentajeHabilidadText.textContent = "%";
         
-       // porcentajeHabilidadTextDetalle.id = "detallePorcentajeHabilidad_" + contador;
-        //porcentajeHabilidadTextDetalle.textContent = "%";
-        
         frontCircle.id = "frontcircle_" + contador;
         frontCircle.setAttribute("stroke-dashoffset", 364);
-        
-        //frontCircleDetalle.id = "detalleFrontCircle_" + contador;
-        //frontCircleDetalle.setAttribute("stroke-dashoffset", 364);
             
         document.getElementById("nuevaHabilidadForm").appendChild(copia);
         document.getElementById("nuevaHabilidadPreview").appendChild(copia1);
-        //document.getElementById("nuevaHabilidadDetalle").appendChild(copia2);
         
         contador++;
     }
@@ -1154,7 +1136,6 @@
         html += '    <p class="preview-text"><span class="label-strong">Experiencia:</span> ' + experiencia + '</p>';
         html += '  </div>';
 
-        //html += '</div>';
         
         
         html += '<h2 class="habilities">' + 'Habilidades' + '</h2>';
