@@ -451,6 +451,7 @@
         }
     </style>
 </head>
+</head>
 <body>
 <div class="page-container">
 
@@ -655,7 +656,7 @@
     let perfiles = [];
     let indiceEdicion = -1;
     let fotoGlobalUrl = "<%= (fotoUrl != null ? fotoUrl : "") %>";
-
+    
     // ==========================
     // STORAGE
     // ==========================
@@ -768,8 +769,9 @@
         updatePreview();
     }
 
-    function limpiarFormulario() {
-        indiceEdicion = -1;
+    function limpiarFormulario() {   
+        eliminarAllHabilidades();
+        ineliminarAllHabilidades();diceEdicion = -1;
         const indice = document.getElementById("indiceEdicion");
         if (indice) indice.value = "-1";
         cargarFormulario({
@@ -789,6 +791,7 @@
             nombreHabilidad:"",
             porcentajeHabilidad:""
         });
+        eliminarAllHabilidades();
     }
 
     // ==========================
@@ -1111,6 +1114,7 @@
         const experiencia = p.experiencia || "—";
         const nombreHabilidad = p.nombreHabilidad || "—";
         const porcentajeHabilidad = p.porcentajeHabilidad || "—";
+        
        
 
         let html = "";
@@ -1154,17 +1158,24 @@
         
         
         html += '<h2 class="habilities">' + 'Habilidades' + '</h2>';
-       
+        
         html +=  '<div >';
         html +=     '<svg viewBox="-17 -17 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg)">';
-        html +=         '<text  class="habilityname" x="70" y="-3" style="transform:rotate(90deg) translate(0px, -145px)">' + p.nombreHabilidad + '</text>';
+        html +=         '<text  class="habilityname" x="70" y="-3" style="transform:rotate(90deg) translate(0px, -145px)">' + p.nombreHabilidad.toUpperCase() + '</text>';
         html +=         '<circle class="backcircle">' + '</circle>';
         html +=         '<circle  class="frontcircle" stroke-dashoffset="'+ (-(364 * p.porcentajeHabilidad / 100 - 364)) + 'px">' + '</circle>';
         html +=         '<text class="textpercent" x="35px" y="80px" style="transform:rotate(90deg) translate(0px, -138px)">' + p.porcentajeHabilidad + '%' + '</text>';
         html +=     '</svg>';
+            
+        for (let i = 0; i < contador; i++) {
+        html +=     '<svg viewBox="-17 -17 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg)">';
+        html +=         '<text  class="habilityname" x="70" y="-3" style="transform:rotate(90deg) translate(0px, -145px)">' + p.habilidades[i].nombre.toUpperCase()+ '</text>';
+        html +=         '<circle class="backcircle">' + '</circle>';
+        html +=         '<circle  class="frontcircle" stroke-dashoffset="'+ (-(364 * p.habilidades[i].porcentaje / 100 - 364)) + 'px">' + '</circle>';
+        html +=         '<text class="textpercent" x="35px" y="80px" style="transform:rotate(90deg) translate(0px, -138px)">' + p.habilidades[i].porcentaje + '%' + '</text>';
+        html +=     '</svg>';}
         html += '</div>';
         html += '</div>';
-
         cont.innerHTML = html;
     }
 
@@ -1252,4 +1263,5 @@
 
 </body>
 </html>
+
 
