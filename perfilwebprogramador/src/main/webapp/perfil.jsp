@@ -115,10 +115,21 @@
             border: none;
             cursor: pointer;
         }
+        button.btn-soft.btn-small:hover{
+            border-bottom: 2px solid #7f1d1d;
+            background: #f3dadaf0;
+        }
 
         .btn-secondary {
             background: #fef3c7;
             color: #92400e;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        .btn-secondary:hover{
+            background: #F2E7BE;
+            border-bottom: 2px solid #92400e;
         }
 
         .btn-primary {
@@ -129,6 +140,9 @@
             padding: 6px 14px;
             font-size: 13px;
             cursor: pointer;
+        }
+        .btn-primary:hover{
+            background: #ef690c;
         }
 
         .banner-edit-columns {
@@ -272,6 +286,9 @@
             padding: 6px 14px;
             font-size: 13px;
             cursor: pointer;
+        }
+        .btn-danger:hover{
+            background: #f16363;
         }
 
         .btn-soft {
