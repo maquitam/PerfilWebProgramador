@@ -115,10 +115,21 @@
             border: none;
             cursor: pointer;
         }
+        button.btn-soft.btn-small:hover{
+            border-bottom: 2px solid #7f1d1d;
+            background: #f3dadaf0;
+        }
 
         .btn-secondary {
             background: #fef3c7;
             color: #92400e;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        .btn-secondary:hover{
+            background: #F2E7BE;
+            border-bottom: 2px solid #92400e;
         }
 
         .btn-primary {
@@ -129,6 +140,9 @@
             padding: 6px 14px;
             font-size: 13px;
             cursor: pointer;
+        }
+        .btn-primary:hover{
+            background: #ef690c;
         }
 
         .banner-edit-columns {
@@ -273,6 +287,9 @@
             font-size: 13px;
             cursor: pointer;
         }
+        .btn-danger:hover{
+            background: #f16363;
+        }
 
         .btn-soft {
             background: #fee2e2;
@@ -391,6 +408,46 @@
         .profile-list-actions {
             display: flex;
             gap: 6px;
+        }
+        
+        /*Circulo de porcentaje de habilidad*/    
+        .backcircle {
+            r: 58px;
+            cx: 68px;
+            cy: 68px;
+            stroke: #FEF3C7;
+            stroke-width: 18px;
+            fill: transparent;
+        }
+        .frontcircle {
+            r: 58px;
+            cx: 68px;
+            cy: 68px;
+            stroke: #FBBF24;
+            stroke-width: 20px;
+            stroke-linecap: round;
+            fill: transparent;
+            stroke-dasharray: 364.24px;
+        }
+        .textpercent {
+            fill: #3C3A49; /*#BD6C2E*/
+            font-size: 35px;
+            font-weight: bold;
+        }
+        h2.habilities{
+            color: #3C3A49; 
+        }
+        .habilityname {
+            text-anchor: middle;
+            font-size: 24px;
+            fill: #3C3A49;
+            font-weight: bold;
+        }
+        svg {
+            width: 136px;
+            height: 119px;
+            border: none;
+            margin: 15px 15px 0px 0px;
         }
     </style>
 </head>
@@ -514,9 +571,23 @@
                         <label class="form-label">Experiencia</label>
                         <textarea class="form-textarea" id="inputExperiencia" oninput="updatePreview()"></textarea>
                     </div>
+                    <div id="nuevaHabilidad">
+                        <div class="form-group">
+                            <label class="form-label">Nombre Habilidad</label>
+                            <input class="form-input" id="inputNombreHabilidad" placeholder="JAVA" oninput="updatePreview()">
+                        </div>
+                
+                        <div class="form-group">
+                            <label class="form-label">Porcentaje Habilidad</label>
+                            <input type="number" min="0" max="100" placeholder="60" class="form-input" id="inputPorcentajeHabilidad" oninput="updatePreview()">
+                        </div>
+                    </div>
+                    <div id="nuevaHabilidadForm"></div>
 
                     <div class="form-actions">
                         <button type="button" class="btn-secondary" id="btnCargarFoto">Cargar foto</button>
+                        <button class="btn-secondary" type="button" onclick="agregarHabilidades()">Nueva Habilidad</button>
+                        <button class="btn-secondary" type="button" onclick="eliminarHabilidades()">Eliminar Habilidad</button>
                         <button type="button" class="btn-primary" onclick="guardarPerfil()">Guardar cambios</button>
                         <button type="button" class="btn-danger" onclick="eliminarFormulario()">Eliminar</button>
                     </div>
@@ -547,6 +618,16 @@
                     <p class="preview-text"><span class="label-strong">Ocupación:</span> <span id="previewOcupacion">—</span></p>
                     <p class="preview-text"><span class="label-strong">Biografía:</span> <span id="previewBiografia">—</span></p>
                     <p class="preview-text"><span class="label-strong">Experiencia:</span> <span id="previewExperiencia">—</span></p>
+                    <div class="label-strong">Habilidades</div>
+                    <div> 
+                        <svg id="progressHabilidad" viewBox="-17 -17 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg)">
+                            <text id="previewNombreHabilidad" class="habilityname" x="70" y="-3" style="transform:rotate(90deg) translate(0px, -145px)">—</text>
+                            <circle class="backcircle"></circle>
+                            <circle id="frontcircle" class="frontcircle" stroke-dashoffset="-364px"></circle>
+                            <text id="previewPorcentajeHabilidad" class="textpercent" x="35px" y="80px" style="transform:rotate(90deg) translate(0px, -138px)">—</text>
+                        </svg>
+                        <span id="nuevaHabilidadPreview"></span>
+                    </div>
                 </div>
             </div>
         </section>
@@ -574,7 +655,7 @@
     let perfiles = [];
     let indiceEdicion = -1;
     let fotoGlobalUrl = "<%= (fotoUrl != null ? fotoUrl : "") %>";
-
+    let contador = 0;
     // ==========================
     // STORAGE
     // ==========================
@@ -632,7 +713,18 @@
     // FORMULARIO PERFIL
     // ==========================
     function leerFormulario() {
+        const habilidades = [];
+        for (let i = 0; i < contador; i++) {
+            const nombre = document.getElementById("inputNombreHabilidad_" + i)?.value.trim() || "";
+            const porcentaje = document.getElementById("inputPorcentajeHabilidad_" + i)?.value.trim() || "";
+            habilidades.push({
+                nombre: nombre,
+                porcentaje: porcentaje
+                
+            });
+        }
         return {
+            habilidades,
             nombres: document.getElementById("inputNombres").value.trim(),
             apellidos: document.getElementById("inputApellidos").value.trim(),
             edad: document.getElementById("inputEdad").value.trim(),
@@ -645,7 +737,10 @@
             linkedin: document.getElementById("inputLinkedin").value.trim(),
             biografia: document.getElementById("inputBiografia").value.trim(),
             experiencia: document.getElementById("inputExperiencia").value.trim(),
+            nombreHabilidad: document.getElementById("inputNombreHabilidad").value.trim(),
+            porcentajeHabilidad: document.getElementById("inputPorcentajeHabilidad").value.trim(),
             fotoUrl: fotoGlobalUrl || ""
+            
         };
     }
 
@@ -662,6 +757,15 @@
         document.getElementById("inputLinkedin").value = perfil.linkedin || "";
         document.getElementById("inputBiografia").value = perfil.biografia || "";
         document.getElementById("inputExperiencia").value = perfil.experiencia || "";
+        document.getElementById("inputNombreHabilidad").value = perfil.nombreHabilidad || "";
+        document.getElementById("inputPorcentajeHabilidad").value = perfil.porcentajeHabilidad|| "";
+              
+        if(perfil.habilidades.length > 0){
+            for (let z = 0 ; z < perfil.habilidades.length; z++) {
+            document.getElementById("inputNombreHabilidad_" + z).value = perfil.habilidades[z].nombre|| "";
+            document.getElementById("inputPorcentajeHabilidad_" + z).value = perfil.habilidades[z].porcentaje|| "";
+            }
+        }
 
         if (perfil.fotoUrl) {
             fotoGlobalUrl = perfil.fotoUrl;
@@ -672,8 +776,9 @@
         updatePreview();
     }
 
-    function limpiarFormulario() {
-        indiceEdicion = -1;
+    function limpiarFormulario() {   
+        eliminarAllHabilidades();
+        diceEdicion = -1;
         const indice = document.getElementById("indiceEdicion");
         if (indice) indice.value = "-1";
         cargarFormulario({
@@ -689,7 +794,9 @@
             linkedin: "",
             biografia: "",
             experiencia: "",
-            fotoUrl: ""
+            fotoUrl: "",
+            nombreHabilidad:"",
+            porcentajeHabilidad:""
         });
     }
 
@@ -723,6 +830,16 @@
         document.getElementById("previewOcupacion").textContent = p.ocupacion || "—";
         document.getElementById("previewBiografia").textContent = p.biografia || "—";
         document.getElementById("previewExperiencia").textContent = p.experiencia || "—";
+        
+        document.getElementById("previewNombreHabilidad").textContent = p.nombreHabilidad.toUpperCase() || "—";
+        document.getElementById("previewPorcentajeHabilidad").textContent = p.porcentajeHabilidad + "%" || "—";
+        document.getElementById("frontcircle").setAttribute("stroke-dashoffset",-(364 * p.porcentajeHabilidad / 100 - 364));
+
+        for (let i = 0; i < contador; i++) {
+            document.getElementById("previewNombreHabilidad_" + i).textContent = p.habilidades[i].nombre.toUpperCase() || "—";
+            document.getElementById("previewPorcentajeHabilidad_" + i).textContent = p.habilidades[i].porcentaje + "%" || "—";
+            document.getElementById("frontcircle_" + i).setAttribute("stroke-dashoffset", -(364 * p.habilidades[i].porcentaje / 100 - 364)); 
+        }
     }
 
     // ==========================
@@ -741,13 +858,76 @@
         } else {
             perfiles.push(p);
         }
-
+        activarTab("ver");
         guardarPerfilesEnStorage();
         renderEditarListado();
         renderVerListado();
         limpiarFormulario();
         setBannerPortafolio();
-        activarTab("ver");
+    }
+    
+    function agregarHabilidades() {
+        let plantilla = document.getElementById("nuevaHabilidad");
+        let plantilla1 = document.getElementById("progressHabilidad");
+        
+        let copia = plantilla.cloneNode(true);
+        let copia1 = plantilla1.cloneNode(true);
+        
+        copia.style.display = "block";
+        copia1.style.display = "inline";
+
+        copia.id = "habilidades_" + contador;
+        copia1.id = "habilidadProgress_" + contador;
+
+        let nombreInput = copia.querySelector("#inputNombreHabilidad");
+        let porcentajeInput = copia.querySelector("#inputPorcentajeHabilidad");
+        
+        let nombreHabilidadText = copia1.querySelector("#previewNombreHabilidad");
+        let porcentajeHabilidadText = copia1.querySelector("#previewPorcentajeHabilidad");
+        let frontCircle = copia1.querySelector("#frontcircle");
+        
+        nombreInput.id = "inputNombreHabilidad_" + contador;
+        nombreInput.value = "";
+        
+        porcentajeInput.id = "inputPorcentajeHabilidad_" + contador;
+        porcentajeInput.value = "";
+        
+        nombreHabilidadText.id = "previewNombreHabilidad_" + contador;
+        nombreHabilidadText.textContent = "—";
+               
+        porcentajeHabilidadText.id = "previewPorcentajeHabilidad_" + contador;
+        porcentajeHabilidadText.textContent = "%";
+        
+        frontCircle.id = "frontcircle_" + contador;
+        frontCircle.setAttribute("stroke-dashoffset", 364);
+                  
+        document.getElementById("nuevaHabilidadForm").appendChild(copia);
+        document.getElementById("nuevaHabilidadPreview").appendChild(copia1);
+        
+        contador++;
+    }
+
+    function eliminarHabilidades() {
+        if (contador > 0) {
+            const index = contador - 1;
+
+            const formBlock = document.getElementById("habilidades_" + index);
+            if (formBlock) formBlock.remove();
+
+            const previewBlock = document.getElementById("habilidadProgress_" + index);
+            if (previewBlock) previewBlock.remove();
+
+            const detalleBlock = document.getElementById("habilidadProgressDatalle_" + index);
+            if (detalleBlock) previewBlock.remove();
+
+            contador--;
+        }
+    }
+
+    function eliminarAllHabilidades() {
+        while (contador > 0) {
+            eliminarHabilidades();
+        }
     }
 
     function eliminarFormulario() {
@@ -813,12 +993,15 @@
             const btnEditar = document.createElement("button");
             btnEditar.className = "btn-secondary btn-small";
             btnEditar.textContent = "Editar";
-            btnEditar.onclick = function () {
+            btnEditar.onclick = function () {      
                 indiceEdicion = idx;
                 const indice = document.getElementById("indiceEdicion");
-                if (indice) indice.value = String(idx);
-                cargarFormulario(p);
+                if (indice) indice.value = String(idx);            
                 activarTab("agregar");
+                for(let i = 0; i < p.habilidades.length; i++){
+                    agregarHabilidades();
+                }
+                cargarFormulario(p);  
             };
 
             const btnEliminar = document.createElement("button");
@@ -902,6 +1085,11 @@
     }
 
     function mostrarDetallePerfil(p) {
+        window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth"
+        });
+
         const cont = document.getElementById("detalleVerPerfil");
         if (!cont) return;
 
@@ -918,7 +1106,9 @@
         const linkedin = p.linkedin || "";
         const biografia = p.biografia || "—";
         const experiencia = p.experiencia || "—";
-
+        const nombreHabilidad = p.nombreHabilidad || "—";
+        const porcentajeHabilidad = p.porcentajeHabilidad || "—";
+             
         let html = "";
         html += '<div style="margin-top:8px; padding:16px 14px; background:#fff7ed; border-radius:16px; border:1px solid #fed7aa;">';
         html += '  <div class="profile-title" style="margin-bottom:10px;">Detalle del perfil</div>';
@@ -956,15 +1146,38 @@
         html += '    <p class="preview-text"><span class="label-strong">Experiencia:</span> ' + experiencia + '</p>';
         html += '  </div>';
 
+        //html += '</div>';
+        
+        
+        html += '<h2 class="habilities">' + 'Habilidades' + '</h2>';
+        
+        html +=  '<div >';
+        html +=     '<svg viewBox="-17 -17 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg)">';
+        html +=         '<text  class="habilityname" x="70" y="-3" style="transform:rotate(90deg) translate(0px, -145px)">' + p.nombreHabilidad.toUpperCase() + '</text>';
+        html +=         '<circle class="backcircle">' + '</circle>';
+        html +=         '<circle  class="frontcircle" stroke-dashoffset="'+ (-(364 * p.porcentajeHabilidad / 100 - 364)) + 'px">' + '</circle>';
+        html +=         '<text class="textpercent" x="35px" y="80px" style="transform:rotate(90deg) translate(0px, -138px)">' + p.porcentajeHabilidad + '%' + '</text>';
+        html +=     '</svg>';
+            
+        for (let i = 0; i < p.habilidades.length; i++) {
+        agregarHabilidades();
+        html +=     '<svg viewBox="-17 -17 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg)">';
+        html +=         '<text  class="habilityname" x="70" y="-3" style="transform:rotate(90deg) translate(0px, -145px)">' + p.habilidades[i].nombre.toUpperCase()+ '</text>';
+        html +=         '<circle class="backcircle">' + '</circle>';
+        html +=         '<circle  class="frontcircle" stroke-dashoffset="'+ (-(364 * p.habilidades[i].porcentaje / 100 - 364)) + 'px">' + '</circle>';
+        html +=         '<text class="textpercent" x="35px" y="80px" style="transform:rotate(90deg) translate(0px, -138px)">' + p.habilidades[i].porcentaje + '%' + '</text>';
+        html +=     '</svg>';}
         html += '</div>';
-
+        html += '</div>';
         cont.innerHTML = html;
     }
+    
 
     // ==========================
     // TABS
     // ==========================
     function activarTab(nombre) {
+        eliminarAllHabilidades();
         document.querySelectorAll(".tab-button").forEach(function (btn) {
             btn.classList.toggle("active", btn.dataset.tab === nombre);
         });
