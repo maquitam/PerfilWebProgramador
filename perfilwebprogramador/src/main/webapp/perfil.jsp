@@ -662,7 +662,88 @@
     function cargarPerfilesDesdeStorage() {
         const data = localStorage.getItem(STORAGE_KEY);
         if (!data) {
-            perfiles = [];
+            perfiles = [
+                {
+                    nombres: "Maria Camila",
+                    apellidos: "Parra Morales",
+                    edad: "21",
+                    telefono: "302",
+                    correo: "maria.parram@udea.edu.co",
+                    ciudadNacimiento: "Bogotá",
+                    ciudadResidencia: "Medellín",
+                    ocupacion: "Estudiante Ing. Sistemas",
+                    github: "https://github.com/maquitam/PerfilWebProgramador",
+                    linkedin: "N/A",
+                    biografia: "Hola soy maquitam.",
+                    experiencia: "N/A",
+                    fotoUrl: "",
+                    habilidades: [
+                        { nombre: "Python", porcentaje: 60 },
+                        { nombre: "Java", porcentaje: 55 }
+                    ]
+                },
+                {
+                    nombres: "Alejandro",
+                    apellidos: "Lopez Clavijo",
+                    edad: "21",
+                    telefono: "3022480598",
+                    correo: "elkinalejandro.lopez@udea.edu.co",
+                    ciudadNacimiento: "Cucuta",
+                    ciudadResidencia: "Medellin",
+                    ocupacion: "Estudiante",
+                    github: "",
+                    linkedin: "",
+                    biografia: "Hola soy alejo y estoy en tercer semestre de Ingeniería de Sistemas.",
+                    experiencia: "Asistencia administrativa",
+                    fotoUrl: "",
+                    habilidades: [
+                        { nombre: "Java", porcentaje: 65 },
+                        { nombre: "Python", porcentaje: 70 },   // 👈 coma agregada
+                        { nombre: "HTML", porcentaje: 40 }
+                    ]
+                },
+                {
+                    nombres: "Alejandro",
+                    apellidos: "Ruiz Gonzales",
+                    edad: "21",
+                    telefono: "3053622854",
+                    correo: "alejandro.ruizg@udea.edu.co",
+                    ciudadNacimiento: "Medellin",
+                    ciudadResidencia: "Bello",
+                    ocupacion: "Programador",
+                    github: "https://github.com/AlejandroRuizG",
+                    linkedin: "",
+                    biografia: "Alejandro Ruiz González nació en Medellín, Colombia, en el año 2004. Desde temprana edad mostró interés por la tecnología y la resolución de problemas, lo que lo llevó a estudiar Ingeniería de Sistemas en la Universidad de Antioquia. A lo largo de su formación académica, se destacó por su capacidad analítica y su pasión por el aprendizaje continuo. Además de sus estudios, participó en proyectos estudiantiles relacionados con el desarrollo de software y la innovación digital, consolidando su perfil como un joven programador con visión de futuro.; Durante su segundo año de carrera, Alejandro trabajó en un proyecto universitario que consistía en diseñar una aplicación web para la gestión de bibliotecas comunitarias. En este proyecto, se encargó de implementar el sistema de autenticación de usuarios y la base de datos en MySQL, logrando que la aplicación fuera segura y escalable. Posteriormente, colaboró en un hackathon regional donde desarrolló, junto a su equipo, una plataforma de análisis de datos en tiempo real utilizando Python y Django. Su aporte principal fue la creación de algoritmos de optimización que mejoraron la velocidad de procesamiento en un 30%.Gracias a estas experiencias, Alejandro adquirió habilidades en programación orientada a objetos, diseño de interfaces intuitivas y trabajo en equipo bajo metodologías ágiles. Su meta profesional es convertirse en un desarrollador capaz de crear soluciones tecnológicas que impacten positivamente en la sociedad",
+                    experiencia: "",
+                    fotoUrl: "",
+                    habilidades: [
+                        { nombre: "Java", porcentaje: 85 },
+                        { nombre: "Python", porcentaje: 92 },  
+                        { nombre: "C#", porcentaje: 35 }
+                    ]
+                },
+                {
+                    nombres: "Sebastian",
+                    apellidos: "Cardona",
+                    edad: "22",
+                    telefono: "3147812943",
+                    correo: "Sebastian.cardona7@udea.edu.co",
+                    ciudadNacimiento: "Medellin",
+                    ciudadResidencia: "Medellin",
+                    ocupacion: "Estudiante",
+                    github: "",
+                    linkedin: "",
+                    biografia: "",
+                    experiencia: "",
+                    fotoUrl: "",
+                    habilidades: [
+                        { nombre: "Java", porcentaje: 80 },
+                        { nombre: "Python", porcentaje: 70 }
+                    ]
+                }
+            ];
+
+            guardarPerfilesEnStorage();
             return;
         }
         try {
@@ -672,6 +753,7 @@
             perfiles = [];
         }
     }
+
 
     function guardarPerfilesEnStorage() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(perfiles));

@@ -1,12 +1,5 @@
-objetos\Habilidad.class
-objetos\Perfil.class
-repositorio\PerfilRepositorio.class
-servicios\HabilidadEdicionServlet.class
-servicios\VistaPerfilServlet.class
 servicios\PerfilServlet.class
-objetos\VistaPerfil.class
+objetos\Perfil.class
 bannerfoto\BannerConfig.class
-repositorio\VistaPerfilRepositorio.class
+repositorio\PerfilRepositorio.class
 servicios\BannerConfigServlet.class
-repositorio\HabilidadRepositorio.class
-servicios\HabilidadServlet.class
