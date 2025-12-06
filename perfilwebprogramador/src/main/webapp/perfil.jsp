@@ -778,7 +778,7 @@
 
     function limpiarFormulario() {   
         eliminarAllHabilidades();
-        diceEdicion = -1;
+        indiceEdicion = -1;
         const indice = document.getElementById("indiceEdicion");
         if (indice) indice.value = "-1";
         cargarFormulario({
